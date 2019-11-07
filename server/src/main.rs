@@ -15,6 +15,8 @@ use dotenv::dotenv;
 use rocket_contrib::serve::StaticFiles;
 use rocket_contrib::templates::Template;
 
+mod util;
+
 #[database("database")]
 pub struct DatabaseConnection(diesel::SqliteConnection);
 
