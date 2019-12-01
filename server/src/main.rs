@@ -11,6 +11,7 @@ use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 
 mod models;
+mod schema;
 
 fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
