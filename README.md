@@ -16,9 +16,9 @@ However, this is just the parts that I included used.
 |------|------|------|
 | Raspberry Pi Zero W | $10 | [link](http://www.adafruit.com/product/3400) |
 | 6600 mAh 3.7V Lithium Ion Battery Pack | $29.50 | [link](http://www.adafruit.com/product/353) |
-| USB LiIon/LiPoly charger | $12.50 | [link](http://www.adafruit.com/product/259) |
-| Monochrome 128x32 I2C OLED display | $17.50 | [link](http://www.adafruit.com/product/931#tutorials) |
-| Mini-B Male Plug USB Shell | $0.95 | [link](http://www.adafruit.com/product/1389) |
+| PowerBoost 1000 Charger | $19.95 | [link](http://www.adafruit.com/product/2465) |
+| Monochrome 128x32 I2C OLED display | $17.50 | [link](http://www.adafruit.com/product/931) |
+| Micro-B Male Plug USB Shell | $0.95 | [link](http://www.adafruit.com/product/1826) |
 | Micro-B Female Plug USB Connector | $0.95 | [link](http://www.adafruit.com/product/1829) |
 
 ## Instructions
