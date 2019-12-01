@@ -12,6 +12,7 @@ use diesel::r2d2::{self, ConnectionManager};
 
 mod models;
 mod schema;
+mod errors;
 
 fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
