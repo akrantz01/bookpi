@@ -1,34 +1,46 @@
 package models
 
 import (
+	"crypto/rand"
 	"encoding/json"
-	uuid "github.com/satori/go.uuid"
 	bolt "go.etcd.io/bbolt"
+	"io"
 )
 
 type Session struct {
-	Id   uuid.UUID `json:"-"`
-	User User      `json:"user"`
+	Id   []byte `json:"-"`
+	User User   `json:"user"`
 }
 
 // Create a new session
 func NewSession(user User) Session {
+	b := make([]byte, 64)
+	_, _ = io.ReadFull(rand.Reader, b)
+
 	return Session{
-		Id:   uuid.NewV4(),
+		Id:   b,
 		User: user,
 	}
 }
 
 // Retrieve session data from database
-func FindSession(id uuid.UUID, db *bolt.DB) (*Session, error) {
+func FindSession(id []byte, db *bolt.DB) (*Session, error) {
 	var session Session
 	err := db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte("sessions"))
-		raw := bucket.Get(id.Bytes())
+		raw := bucket.Get(id)
 		return json.Unmarshal(raw, &session)
 	})
-	session.Id = id
-	return &session, err
+
+	switch err.(type) {
+	case *json.SyntaxError:
+		return nil, nil
+	case nil:
+		session.Id = id
+		return &session, nil
+	default:
+		return nil, err
+	}
 }
 
 // Save the session to the database
@@ -42,7 +54,7 @@ func (s *Session) Save(db *bolt.DB) error {
 			return err
 		}
 
-		return bucket.Put(s.Id.Bytes(), buf)
+		return bucket.Put(s.Id, buf)
 	})
 }
 
@@ -50,6 +62,6 @@ func (s *Session) Save(db *bolt.DB) error {
 func (s *Session) Delete(db *bolt.DB) error {
 	return db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte("sessions"))
-		return bucket.Delete(s.Id.Bytes())
+		return bucket.Delete(s.Id)
 	})
 }

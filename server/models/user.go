@@ -37,7 +37,14 @@ func FindUser(username string, db *bolt.DB) (*User, error) {
 		return json.Unmarshal(buf, &user)
 	})
 
-	return &user, err
+	switch err.(type) {
+	case *json.SyntaxError:
+		return nil, nil
+	case nil:
+		return &user, err
+	default:
+		return nil, err
+	}
 }
 
 // Save a user to the database

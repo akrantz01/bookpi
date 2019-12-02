@@ -2,10 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/gorilla/handlers"
+	"github.com/akrantz01/bookpi/server/routes"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
-	"github.com/rs/cors"
 	bolt "go.etcd.io/bbolt"
 	"log"
 	"net/http"
@@ -23,7 +22,7 @@ func main() {
 	cfg := loadEnv()
 
 	// Initialize database
-	db, err := bolt.Open(cfg.Database, 0600, nil)
+	db, err := bolt.Open(cfg.Database, 0600, &bolt.Options{Timeout: 5*time.Second})
 	if err != nil {
 		log.Fatalf("Failed to open database: %v\n", err)
 	}
@@ -33,6 +32,19 @@ func main() {
 		}
 	}()
 
+	// Create database buckets if not exist
+	if err := db.Update(func(tx *bolt.Tx) error {
+		if _, err := tx.CreateBucketIfNotExists([]byte("users")); err != nil {
+			return err
+		}
+		if _, err := tx.CreateBucketIfNotExists([]byte("sessions")); err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		log.Fatalf("Failed to initialize database: %v\n", err)
+	}
+
 	// Listen for OS signals
 	shutdown := make(chan os.Signal)
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
@@ -40,10 +52,17 @@ func main() {
 	// Add server router
 	router := mux.NewRouter()
 
+	// Register API routes
+	api := router.PathPrefix("/api").Subrouter()
+	routes.Authentication(db, api)
+
+	// Register session middleware
+	router.Use(sessionMiddleware(db))
+
 	// Setup server
 	server := http.Server{
 		Addr:         cfg.Host + ":" + cfg.Port,
-		Handler:      cors.AllowAll().Handler(handlers.CombinedLoggingHandler(os.Stdout, router)),
+		Handler:      applyWrappers(router),
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
 		IdleTimeout:  60 * time.Second,
