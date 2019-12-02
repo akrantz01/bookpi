@@ -43,7 +43,7 @@ func FindUser(username string, db *bolt.DB) (*User, error) {
 	case *json.SyntaxError:
 		return nil, nil
 	case nil:
-		return &user, err
+		return &user, nil
 	default:
 		return nil, err
 	}
