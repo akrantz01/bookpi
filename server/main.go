@@ -17,7 +17,9 @@ import (
 func main() {
 	// Initialize configuration from environment variables
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Failed to load environment variables: %v\n", err)
+		if !os.IsNotExist(err) {
+			log.Fatalf("Failed to load environment variables: %v\n", err)
+		}
 	}
 	cfg := loadEnv()
 
