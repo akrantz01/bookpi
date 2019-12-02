@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	regexAllLowercase = regexp.MustCompile("^[a-z]+$")
+	regexAllLowercase = regexp.MustCompile("^([a-z0-9]+)$")
 	regexLowercase = regexp.MustCompile("[a-z]+")
 	regexUppercase = regexp.MustCompile("[A-Z]")
 	regexNumeric   = regexp.MustCompile("[0-9]+")
