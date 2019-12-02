@@ -55,6 +55,7 @@ func main() {
 	// Register API routes
 	api := router.PathPrefix("/api").Subrouter()
 	routes.Authentication(db, api)
+	routes.Users(db, api)
 
 	// Register session middleware
 	router.Use(sessionMiddleware(db))

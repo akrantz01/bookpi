@@ -7,9 +7,10 @@ import (
 )
 
 type User struct {
-	Name     string `json:"name"`
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Name     string   `json:"name"`
+	Username string   `json:"username"`
+	Password string   `json:"password"`
+	Sessions []string `json:"sessions"`
 }
 
 // Create a new user
@@ -23,6 +24,7 @@ func NewUser(name, username, password string) (*User, error) {
 		Name:     name,
 		Username: username,
 		Password: h,
+		Sessions: []string{},
 	}, nil
 }
 
