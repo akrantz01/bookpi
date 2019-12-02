@@ -14,10 +14,11 @@ import (
 )
 
 var (
-	passwordRegexLowercase = regexp.MustCompile("[a-z]+")
-	passwordRegexUppercase = regexp.MustCompile("[A-Z]")
-	passwordRegexNumeric = regexp.MustCompile("[0-9]+")
-	passwordRegexSpecial = regexp.MustCompile("[!-_]+")
+	regexAllLowercase = regexp.MustCompile("^[a-z]+$")
+	regexLowercase = regexp.MustCompile("[a-z]+")
+	regexUppercase = regexp.MustCompile("[A-Z]")
+	regexNumeric   = regexp.MustCompile("[0-9]+")
+	regexSpecial   = regexp.MustCompile("[!-_]+")
 )
 
 // Handle user authentication
@@ -56,19 +57,25 @@ func register(db *bolt.DB) func(w http.ResponseWriter, r *http.Request) {
 		} else if body.Name == "" || body.Username == "" || body.Password == "" {
 			responses.Error(w, http.StatusBadRequest, "fields 'name', 'username', and 'password' are required")
 			return
+		} else if len(body.Username) < 3 {
+			responses.Error(w, http.StatusBadRequest, "field 'username' must be at least 3 characters")
+			return
+		} else if !regexAllLowercase.MatchString(body.Username) {
+			responses.Error(w, http.StatusBadRequest, "field 'username' must only contain lowercase characters")
+			return
 		} else if len(body.Password) < 8 {
 			responses.Error(w, http.StatusBadRequest, "field 'password' must be at least 8 characters")
 			return
-		} else if !passwordRegexLowercase.MatchString(body.Password) {
+		} else if !regexLowercase.MatchString(body.Password) {
 			responses.Error(w, http.StatusBadRequest, "field 'password' must contain a lowercase character")
 			return
-		} else if !passwordRegexUppercase.MatchString(body.Password) {
+		} else if !regexUppercase.MatchString(body.Password) {
 			responses.Error(w, http.StatusBadRequest, "field 'password' must contain a uppercase character")
 			return
-		} else if !passwordRegexNumeric.MatchString(body.Password) {
+		} else if !regexNumeric.MatchString(body.Password) {
 			responses.Error(w, http.StatusBadRequest, "field 'password' must contain a numeric character")
 			return
-		} else if !passwordRegexSpecial.MatchString(body.Password) {
+		} else if !regexSpecial.MatchString(body.Password) {
 			responses.Error(w, http.StatusBadRequest, "field 'password' must contain a special character")
 			return
 		}

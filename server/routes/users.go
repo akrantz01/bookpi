@@ -108,16 +108,16 @@ func updateUser(w http.ResponseWriter, r *http.Request, session *models.Session,
 		if len(body.Password) < 8 {
 			responses.Error(w, http.StatusBadRequest, "field 'password' must be at least 8 characters")
 			return
-		} else if !passwordRegexLowercase.MatchString(body.Password) {
+		} else if !regexLowercase.MatchString(body.Password) {
 			responses.Error(w, http.StatusBadRequest, "field 'password' must contain a lowercase character")
 			return
-		} else if !passwordRegexUppercase.MatchString(body.Password) {
+		} else if !regexUppercase.MatchString(body.Password) {
 			responses.Error(w, http.StatusBadRequest, "field 'password' must contain a uppercase character")
 			return
-		} else if !passwordRegexNumeric.MatchString(body.Password) {
+		} else if !regexNumeric.MatchString(body.Password) {
 			responses.Error(w, http.StatusBadRequest, "field 'password' must contain a numeric character")
 			return
-		} else if !passwordRegexSpecial.MatchString(body.Password) {
+		} else if !regexSpecial.MatchString(body.Password) {
 			responses.Error(w, http.StatusBadRequest, "field 'password' must contain a special character")
 			return
 		}
