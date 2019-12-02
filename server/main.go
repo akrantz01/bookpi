@@ -42,6 +42,9 @@ func main() {
 		if _, err := tx.CreateBucketIfNotExists([]byte("sessions")); err != nil {
 			return err
 		}
+		if _, err := tx.CreateBucketIfNotExists([]byte("chats")); err != nil {
+			return err
+		}
 		return nil
 	}); err != nil {
 		log.Fatalf("Failed to initialize database: %v\n", err)
@@ -58,6 +61,7 @@ func main() {
 	api := router.PathPrefix("/api").Subrouter()
 	routes.Authentication(db, api)
 	routes.Users(db, api)
+	routes.Chats(db, api)
 
 	// Register session middleware
 	router.Use(sessionMiddleware(db))

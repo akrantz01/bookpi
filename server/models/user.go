@@ -11,6 +11,7 @@ type User struct {
 	Username string   `json:"username"`
 	Password string   `json:"password"`
 	Sessions []string `json:"sessions"`
+	Chats    []string `json:"chats"`
 }
 
 // Create a new user
@@ -71,6 +72,21 @@ func (u *User) Authenticate(username, password string) (bool, error) {
 	}
 
 	return hash.Verify(password, u.Password)
+}
+
+// Associate a chat with the user
+func (u *User) AddChat(id string) {
+	u.Chats = append(u.Chats, id)
+}
+
+// Disassociate a user from the chat
+func (u *User) RemoveChat(id string) {
+	for i, chat := range u.Chats {
+		if chat == id {
+			u.Chats = append(u.Chats[:i], u.Chats[i+1:]...)
+			break
+		}
+	}
 }
 
 // Delete the user from the database
