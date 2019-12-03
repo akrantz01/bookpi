@@ -32,7 +32,7 @@ func NewSession(user User) Session {
 func FindSession(id []byte, db *bolt.DB) (*Session, error) {
 	var session Session
 	err := db.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("sessions"))
+		bucket := tx.Bucket(BucketSessions)
 		raw := bucket.Get(id)
 		return json.Unmarshal(raw, &session)
 	})
@@ -52,7 +52,7 @@ func FindSession(id []byte, db *bolt.DB) (*Session, error) {
 func (s *Session) Save(db *bolt.DB) error {
 	// Save the session itself
 	if err := db.Update(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("sessions"))
+		bucket := tx.Bucket(BucketSessions)
 
 		// Marshal into JSON
 		buf, err := json.Marshal(s)
@@ -72,7 +72,7 @@ func (s *Session) Save(db *bolt.DB) error {
 // Delete the session from the database
 func (s *Session) Delete(db *bolt.DB) error {
 	return db.Update(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("sessions"))
+		bucket := tx.Bucket(BucketSessions)
 		return bucket.Delete(s.Id)
 	})
 }

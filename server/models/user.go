@@ -33,7 +33,7 @@ func NewUser(name, username, password string) (*User, error) {
 func FindUser(username string, db *bolt.DB) (*User, error) {
 	var user User
 	err := db.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("users"))
+		bucket := tx.Bucket(BucketUsers)
 
 		// Decode user
 		buf := bucket.Get([]byte(username))
@@ -53,7 +53,7 @@ func FindUser(username string, db *bolt.DB) (*User, error) {
 // Save a user to the database
 func (u *User) Save(db *bolt.DB) error {
 	return db.Update(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("users"))
+		bucket := tx.Bucket(BucketUsers)
 
 		// Marshal user data into bytes
 		buf, err := json.Marshal(u)
@@ -92,7 +92,7 @@ func (u *User) RemoveChat(id string) {
 // Delete the user from the database
 func (u *User) Delete(db *bolt.DB) error {
 	return db.Update(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("users"))
+		bucket := tx.Bucket(BucketUsers)
 		return bucket.Delete([]byte(u.Username))
 	})
 }

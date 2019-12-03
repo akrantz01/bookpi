@@ -48,7 +48,7 @@ func FindChat(id uuid.UUID, db *bolt.DB) (*Chat, error) {
 // Save a chat to the database
 func (c *Chat) Save(db *bolt.DB) error {
 	return db.Update(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("chats"))
+		bucket := tx.Bucket(BucketChats)
 
 		// Marshal chat data into bytes
 		buf, err := json.Marshal(c)
@@ -68,7 +68,7 @@ func (c *Chat) AddMessage(message, from string) {
 // Delete a chat from the database
 func (c *Chat) Delete(db *bolt.DB) error {
 	return db.Update(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("chats"))
+		bucket := tx.Bucket(BucketChats)
 		return bucket.Delete(c.Id.Bytes())
 	})
 }

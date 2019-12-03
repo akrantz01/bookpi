@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/akrantz01/bookpi/server/models"
 	"github.com/akrantz01/bookpi/server/routes"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -36,14 +37,10 @@ func main() {
 
 	// Create database buckets if not exist
 	if err := db.Update(func(tx *bolt.Tx) error {
-		if _, err := tx.CreateBucketIfNotExists([]byte("users")); err != nil {
-			return err
-		}
-		if _, err := tx.CreateBucketIfNotExists([]byte("sessions")); err != nil {
-			return err
-		}
-		if _, err := tx.CreateBucketIfNotExists([]byte("chats")); err != nil {
-			return err
+		for _, b := range [][]byte{models.BucketUsers, models.BucketSessions, models.BucketChats} {
+			if _, err := tx.CreateBucketIfNotExists(b); err != nil {
+				return err
+			}
 		}
 		return nil
 	}); err != nil {
