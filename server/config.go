@@ -3,17 +3,19 @@ package main
 import "os"
 
 type config struct {
-	Host     string
-	Port     string
-	Database string
+	Host           string
+	Port           string
+	Database       string
+	FilesDirectory string
 }
 
 func loadEnv() (cfg config) {
 	// Assign config keys
 	cfg = config{
-		Host:     os.Getenv("HOST"),
-		Port:     os.Getenv("PORT"),
-		Database: os.Getenv("DATABASE"),
+		Host:           os.Getenv("HOST"),
+		Port:           os.Getenv("PORT"),
+		Database:       os.Getenv("DATABASE"),
+		FilesDirectory: os.Getenv("FILES_DIR"),
 	}
 
 	// Set defaults if not exist
@@ -25,6 +27,9 @@ func loadEnv() (cfg config) {
 	}
 	if cfg.Database == "" {
 		cfg.Database = "./database.db"
+	}
+	if cfg.FilesDirectory == "" {
+		cfg.Database = "./files"
 	}
 
 	return

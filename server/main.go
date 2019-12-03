@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
 )
@@ -23,6 +24,12 @@ func main() {
 		}
 	}
 	cfg := loadEnv()
+
+	// Initialize file storage directory
+	path, _ := filepath.Abs(cfg.FilesDirectory)
+	if err := os.MkdirAll(path, os.ModeDir|0755); err != nil {
+		log.Fatalf("Failed to create files directory: %v\n", err)
+	}
 
 	// Initialize database
 	db, err := bolt.Open(cfg.Database, 0600, &bolt.Options{Timeout: 5 * time.Second})
