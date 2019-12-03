@@ -32,7 +32,7 @@ func loadEnv() (cfg config) {
 		cfg.Database = "./database.db"
 	}
 	if cfg.FilesDirectory == "" {
-		cfg.Database = "./files"
+		cfg.FilesDirectory = "./files"
 	}
 
 	// Set path as absolute

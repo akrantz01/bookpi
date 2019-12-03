@@ -3,11 +3,13 @@ package routes
 import (
 	"github.com/akrantz01/bookpi/server/responses"
 	"github.com/gorilla/mux"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -42,7 +44,7 @@ func fileRouter(filesDirectory string) func(w http.ResponseWriter, r *http.Reque
 }
 
 // List all files in a directory or a file's information
-func listFiles(w http.ResponseWriter, _ *http.Request, path string) {
+func listFiles(w http.ResponseWriter, r *http.Request, path string) {
 	// Get file statistics
 	info, err := os.Stat(path)
 	if os.IsNotExist(err) {
@@ -94,13 +96,90 @@ func listFiles(w http.ResponseWriter, _ *http.Request, path string) {
 		"size": info.Size(),
 		"last_modified": info.ModTime().Unix(),
 		"directory": info.IsDir(),
+		"root": filepath.Clean(strings.TrimPrefix(r.RequestURI, "/api/files")) == "/",
 		"children": children,
 	})
 }
 
 // Upload a new file
 func createFile(w http.ResponseWriter, r *http.Request, path string) {
+	// Validate initial headers
+	if !strings.HasPrefix(r.Header.Get("Content-Type"), "multipart/form-data") {
+		responses.Error(w, http.StatusBadRequest, "header 'Content-Type' must be 'multipart/form-data'")
+		return
+	}
 
+	// Get file statistics
+	info, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		responses.Error(w, http.StatusNotFound, "specified file/directory does not exist")
+		return
+	} else if err != nil {
+		log.Printf("ERROR: failed to stat file: %v\n", err)
+		responses.Error(w, http.StatusInternalServerError, "failed to stat file")
+		return
+	}
+
+	// Ensure not uploading to file
+	if !info.IsDir() {
+		responses.Error(w, http.StatusBadRequest, "cannot upload to file")
+		return
+	}
+
+	// Allow 32Mb internal buffer for upload
+	if err := r.ParseMultipartForm(32 << 20); err != nil {
+		log.Printf("ERROR: failed to parse multipart form for file upload: %v\n", err)
+		responses.Error(w, http.StatusInternalServerError, "failed to parse form")
+		return
+	}
+
+	// Get file from upload
+	in, handler, err := r.FormFile("file")
+	if err == http.ErrMissingFile {
+		responses.Error(w, http.StatusBadRequest, "field 'file' must be a file")
+		return
+	} else if err != nil {
+		log.Printf("ERROR: failed to parse file from form: %v\n", err)
+		responses.Error(w, http.StatusInternalServerError, "failed to parse form")
+		return
+	}
+	defer func() {
+		if err := in.Close(); err != nil {
+			log.Printf("ERROR: falied to close uploaded file stream: %v\n", err)
+		}
+	}()
+
+	// Check file doesn't already exist
+	if _, err := os.Stat(path+"/"+handler.Filename); err == nil {
+		responses.Error(w, http.StatusConflict, "file already exists")
+		return
+	} else if !os.IsNotExist(err) {
+		log.Printf("ERROR: failed to stat output file: %v\n", err)
+		responses.Error(w, http.StatusInternalServerError, "failed to check output file")
+		return
+	}
+
+	// Open output file
+	out, err := os.OpenFile(path+"/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		log.Printf("ERROR: failed to open output file: %v\n", err)
+		responses.Error(w, http.StatusInternalServerError, "failed to open file")
+		return
+	}
+	defer func() {
+		if err := out.Close(); err != nil {
+			log.Printf("ERROR: failed to close output file: %v\n", err)
+		}
+	}()
+
+	// Copy uploaded to output
+	if _, err := io.Copy(out, in); err != nil {
+		log.Printf("ERROR: failed to copy uploaded file to output file: %v\n", err)
+		responses.Error(w, http.StatusInternalServerError, "failed to copy file")
+		return
+	}
+
+	responses.Success(w)
 }
 
 // Change a file's name on disk
