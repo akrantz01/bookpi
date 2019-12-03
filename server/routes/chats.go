@@ -76,6 +76,12 @@ func listChats(w http.ResponseWriter, r *http.Request, db *bolt.DB) {
 		return
 	}
 
+	// Return empty array if none
+	if len(self.Chats) == 0 {
+		responses.SuccessWithData(w, []string{})
+		return
+	}
+
 	responses.SuccessWithData(w, self.Chats)
 }
 
@@ -173,7 +179,11 @@ func readChat(w http.ResponseWriter, r *http.Request, chatId uuid.UUID, db *bolt
 	// Check that user in chat
 	for _, c := range self.Chats {
 		if c == chatId.String() {
-			responses.SuccessWithData(w, chat)
+			responses.SuccessWithData(w, map[string]string{
+				"user1": chat.User1,
+				"user2": chat.User2,
+				"last_message": chat.Messages[len(chat.Messages)-1],
+			})
 			return
 		}
 	}

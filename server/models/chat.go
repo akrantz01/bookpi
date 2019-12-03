@@ -19,7 +19,7 @@ func NewChat(user1, user2, initialMessage string) *Chat {
 		Id:       uuid.NewV4(),
 		User1:    user1,
 		User2:    user2,
-		Messages: []string{initialMessage},
+		Messages: []string{user1+":"+initialMessage},
 	}
 }
 
@@ -38,6 +38,7 @@ func FindChat(id uuid.UUID, db *bolt.DB) (*Chat, error) {
 	case *json.SyntaxError:
 		return nil, nil
 	case nil:
+		chat.Id = id
 		return &chat, nil
 	default:
 		return nil, err
