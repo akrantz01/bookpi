@@ -62,6 +62,7 @@ func main() {
 	routes.Authentication(db, api)
 	routes.Users(db, api)
 	routes.Chats(db, api)
+	routes.Messages(db, api)
 
 	// Register session middleware
 	router.Use(sessionMiddleware(db))
