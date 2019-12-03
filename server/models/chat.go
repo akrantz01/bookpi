@@ -65,11 +65,6 @@ func (c *Chat) AddMessage(message, from string) {
 	c.Messages = append(c.Messages, from+":"+message)
 }
 
-// Remove a message from the chat
-func (c *Chat) RemoveMessage(index int) {
-	c.Messages = append(c.Messages[:index], c.Messages[index+1:]...)
-}
-
 // Delete a chat from the database
 func (c *Chat) Delete(db *bolt.DB) error {
 	return db.Update(func(tx *bolt.Tx) error {
