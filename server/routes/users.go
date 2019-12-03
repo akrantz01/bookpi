@@ -10,18 +10,19 @@ import (
 	bolt "go.etcd.io/bbolt"
 	"log"
 	"net/http"
+	"os"
 )
 
 // Routes for user management
-func Users(db *bolt.DB, router *mux.Router) {
+func Users(filesDirectory string, db *bolt.DB, router *mux.Router) {
 	subrouter := router.PathPrefix("/user").Subrouter()
 
-	subrouter.HandleFunc("", selfUser(db))
+	subrouter.HandleFunc("", selfUser(filesDirectory, db))
 	subrouter.HandleFunc("/{username}", readUser("", db))
 }
 
 // Operate on the user in the session
-func selfUser(db *bolt.DB) func(w http.ResponseWriter, r *http.Request) {
+func selfUser(filesDirectory string, db *bolt.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Retrieve user from session
 		id, _ := base64.URLEncoding.DecodeString(r.Header.Get("X-BPI-Session-Id"))
@@ -40,7 +41,7 @@ func selfUser(db *bolt.DB) func(w http.ResponseWriter, r *http.Request) {
 			updateUser(w, r, session, db)
 
 		case http.MethodDelete:
-			deleteUser(w, r, session, db)
+			deleteUser(w, r, session, filesDirectory, db)
 
 		default:
 			responses.Error(w, http.StatusMethodNotAllowed, "method not allowed")
@@ -143,7 +144,7 @@ func updateUser(w http.ResponseWriter, r *http.Request, session *models.Session,
 }
 
 // Delete a user and invalidate their sessions
-func deleteUser(w http.ResponseWriter, r *http.Request, _ *models.Session, db *bolt.DB) {
+func deleteUser(w http.ResponseWriter, r *http.Request, _ *models.Session, filesDirectory string, db *bolt.DB) {
 	// Get user from database
 	user, err := models.FindUser(r.Header.Get("X-BPI-Username"), db)
 	if err != nil {
@@ -168,6 +169,13 @@ func deleteUser(w http.ResponseWriter, r *http.Request, _ *models.Session, db *b
 	}); err != nil {
 		log.Printf("ERROR: failed to delete sessions for user from database: %v\n", err)
 		responses.Error(w, http.StatusInternalServerError, "failed to delete from database")
+		return
+	}
+
+	// Delete the user's files
+	if err := os.RemoveAll(filesDirectory+"/"+user.Username); err != nil {
+		log.Printf("ERROR: failed to delete user file storage directory: %v\n", err)
+		responses.Error(w, http.StatusInternalServerError, "failed to delete directory")
 		return
 	}
 

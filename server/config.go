@@ -1,6 +1,9 @@
 package main
 
-import "os"
+import (
+	"os"
+	"path/filepath"
+)
 
 type config struct {
 	Host           string
@@ -31,6 +34,9 @@ func loadEnv() (cfg config) {
 	if cfg.FilesDirectory == "" {
 		cfg.Database = "./files"
 	}
+
+	// Set path as absolute
+	cfg.FilesDirectory, _ = filepath.Abs(cfg.FilesDirectory)
 
 	return
 }

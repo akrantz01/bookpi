@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"path/filepath"
 	"syscall"
 	"time"
 )
@@ -26,8 +25,7 @@ func main() {
 	cfg := loadEnv()
 
 	// Initialize file storage directory
-	path, _ := filepath.Abs(cfg.FilesDirectory)
-	if err := os.MkdirAll(path, os.ModeDir|0755); err != nil {
+	if err := os.MkdirAll(cfg.FilesDirectory, os.ModeDir|0755); err != nil {
 		log.Fatalf("Failed to create files directory: %v\n", err)
 	}
 
@@ -63,8 +61,8 @@ func main() {
 
 	// Register API routes
 	api := router.PathPrefix("/api").Subrouter()
-	routes.Authentication(db, api)
-	routes.Users(db, api)
+	routes.Authentication(cfg.FilesDirectory, db, api)
+	routes.Users(cfg.FilesDirectory, db, api)
 	routes.Chats(db, api)
 	routes.Messages(db, api)
 

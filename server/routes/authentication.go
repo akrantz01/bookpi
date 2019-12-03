@@ -9,29 +9,30 @@ import (
 	bolt "go.etcd.io/bbolt"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
 	"time"
 )
 
 var (
-	regexAllLowercase = regexp.MustCompile("^([a-z0-9]+)$")
-	regexLowercase    = regexp.MustCompile("[a-z]+")
-	regexUppercase    = regexp.MustCompile("[A-Z]")
-	regexNumeric      = regexp.MustCompile("[0-9]+")
-	regexSpecial      = regexp.MustCompile("[!-_]+")
+	regexUsername  = regexp.MustCompile("^([a-zA-Z0-9]+)$")
+	regexLowercase = regexp.MustCompile("[a-z]+")
+	regexUppercase = regexp.MustCompile("[A-Z]")
+	regexNumeric   = regexp.MustCompile("[0-9]+")
+	regexSpecial   = regexp.MustCompile("[!-_]+")
 )
 
 // Handle user authentication
-func Authentication(db *bolt.DB, router *mux.Router) {
+func Authentication(filesDirectory string, db *bolt.DB, router *mux.Router) {
 	subrouter := router.PathPrefix("/auth").Subrouter()
 
-	subrouter.HandleFunc("/register", register(db))
+	subrouter.HandleFunc("/register", register(filesDirectory, db))
 	subrouter.HandleFunc("/login", login(db))
 	subrouter.HandleFunc("/logout", logout(db))
 }
 
 // Handle user registration
-func register(db *bolt.DB) func(w http.ResponseWriter, r *http.Request) {
+func register(filesDirectory string, db *bolt.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Validate initial request on method, headers, and body existence
 		if r.Method != http.MethodPost {
@@ -60,7 +61,7 @@ func register(db *bolt.DB) func(w http.ResponseWriter, r *http.Request) {
 		} else if len(body.Username) < 3 {
 			responses.Error(w, http.StatusBadRequest, "field 'username' must be at least 3 characters")
 			return
-		} else if !regexAllLowercase.MatchString(body.Username) {
+		} else if !regexUsername.MatchString(body.Username) {
 			responses.Error(w, http.StatusBadRequest, "field 'username' must only contain lowercase characters")
 			return
 		} else if len(body.Password) < 8 {
@@ -96,6 +97,13 @@ func register(db *bolt.DB) func(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Printf("ERROR: failed to hash user password: %v\n", err)
 			responses.Error(w, http.StatusInternalServerError, "failed to hash password")
+			return
+		}
+
+		// Create user file directory
+		if err := os.Mkdir(filesDirectory+"/"+u.Username, os.ModeDir|0755); err != nil {
+			log.Printf("ERROR: failed to create user directory for file storage: %v\n", err)
+			responses.Error(w, http.StatusInternalServerError, "failed to create directory")
 			return
 		}
 
