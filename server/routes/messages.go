@@ -93,7 +93,7 @@ func createMessage(w http.ResponseWriter, r *http.Request, chatId uuid.UUID, db 
 	}
 
 	// Parse and validate body fields
-	var body struct{
+	var body struct {
 		Message string `json:"message"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {

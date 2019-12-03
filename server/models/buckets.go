@@ -1,7 +1,7 @@
 package models
 
 var (
-	BucketUsers = []byte("users")
+	BucketUsers    = []byte("users")
 	BucketSessions = []byte("sessions")
-	BucketChats = []byte("chats")
+	BucketChats    = []byte("chats")
 )

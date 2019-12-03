@@ -97,8 +97,8 @@ func createChat(w http.ResponseWriter, r *http.Request, db *bolt.DB) {
 	}
 
 	// Parse and validate body fields
-	var body struct{
-		To string `json:"to"`
+	var body struct {
+		To      string `json:"to"`
 		Message string `json:"message"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
@@ -180,8 +180,8 @@ func readChat(w http.ResponseWriter, r *http.Request, chatId uuid.UUID, db *bolt
 	for _, c := range self.Chats {
 		if c == chatId.String() {
 			responses.SuccessWithData(w, map[string]string{
-				"user1": chat.User1,
-				"user2": chat.User2,
+				"user1":        chat.User1,
+				"user2":        chat.User2,
 				"last_message": chat.Messages[len(chat.Messages)-1],
 			})
 			return

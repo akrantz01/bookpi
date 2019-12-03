@@ -25,7 +25,7 @@ func main() {
 	cfg := loadEnv()
 
 	// Initialize database
-	db, err := bolt.Open(cfg.Database, 0600, &bolt.Options{Timeout: 5*time.Second})
+	db, err := bolt.Open(cfg.Database, 0600, &bolt.Options{Timeout: 5 * time.Second})
 	if err != nil {
 		log.Fatalf("Failed to open database: %v\n", err)
 	}

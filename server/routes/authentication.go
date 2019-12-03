@@ -15,10 +15,10 @@ import (
 
 var (
 	regexAllLowercase = regexp.MustCompile("^([a-z0-9]+)$")
-	regexLowercase = regexp.MustCompile("[a-z]+")
-	regexUppercase = regexp.MustCompile("[A-Z]")
-	regexNumeric   = regexp.MustCompile("[0-9]+")
-	regexSpecial   = regexp.MustCompile("[!-_]+")
+	regexLowercase    = regexp.MustCompile("[a-z]+")
+	regexUppercase    = regexp.MustCompile("[A-Z]")
+	regexNumeric      = regexp.MustCompile("[0-9]+")
+	regexSpecial      = regexp.MustCompile("[!-_]+")
 )
 
 // Handle user authentication
@@ -46,8 +46,8 @@ func register(db *bolt.DB) func(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Parse and validate body fields
-		var body struct{
-			Name string `json:"name"`
+		var body struct {
+			Name     string `json:"name"`
 			Username string `json:"username"`
 			Password string `json:"password"`
 		}
@@ -126,7 +126,7 @@ func login(db *bolt.DB) func(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Parse and validate body fields
-		var body struct{
+		var body struct {
 			Username string `json:"username"`
 			Password string `json:"password"`
 		}
@@ -169,12 +169,12 @@ func login(db *bolt.DB) func(w http.ResponseWriter, r *http.Request) {
 
 		// Set session cookie
 		http.SetCookie(w, &http.Cookie{
-			Name:       "bp-id",
-			Value:      base64.URLEncoding.EncodeToString(session.Id),
-			Path:       "/",
-			Expires:    time.Now().Add(time.Hour*24),
-			Secure:     false,
-			HttpOnly:   true,
+			Name:     "bp-id",
+			Value:    base64.URLEncoding.EncodeToString(session.Id),
+			Path:     "/",
+			Expires:  time.Now().Add(time.Hour * 24),
+			Secure:   false,
+			HttpOnly: true,
 		})
 
 		responses.Success(w)

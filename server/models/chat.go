@@ -7,10 +7,10 @@ import (
 )
 
 type Chat struct {
-	Id uuid.UUID `json:"-"`
-	User1 string `json:"user1"`
-	User2 string `json:"user2"`
-	Messages []string `json:"messages"`
+	Id       uuid.UUID `json:"-"`
+	User1    string    `json:"user1"`
+	User2    string    `json:"user2"`
+	Messages []string  `json:"messages"`
 }
 
 // Create a new chat
@@ -19,7 +19,7 @@ func NewChat(user1, user2, initialMessage string) *Chat {
 		Id:       uuid.NewV4(),
 		User1:    user1,
 		User2:    user2,
-		Messages: []string{user1+":"+initialMessage},
+		Messages: []string{user1 + ":" + initialMessage},
 	}
 }
 

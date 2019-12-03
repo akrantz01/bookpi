@@ -88,8 +88,8 @@ func updateUser(w http.ResponseWriter, r *http.Request, session *models.Session,
 	}
 
 	// Parse and validate body fields
-	var body struct{
-		Name string `json:"name"`
+	var body struct {
+		Name     string `json:"name"`
 		Password string `json:"password"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
