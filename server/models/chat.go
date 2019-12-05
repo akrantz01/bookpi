@@ -27,7 +27,7 @@ func NewChat(user1, user2, initialMessage string) *Chat {
 func FindChat(id uuid.UUID, db *bolt.DB) (*Chat, error) {
 	var chat Chat
 	err := db.View(func(tx *bolt.Tx) error {
-		bucket := tx.Bucket([]byte("chats"))
+		bucket := tx.Bucket(BucketChats)
 
 		// Decode chat
 		buf := bucket.Get(id.Bytes())

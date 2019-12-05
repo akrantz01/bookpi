@@ -42,7 +42,7 @@ func main() {
 
 	// Create database buckets if not exist
 	if err := db.Update(func(tx *bolt.Tx) error {
-		for _, b := range [][]byte{models.BucketUsers, models.BucketSessions, models.BucketChats} {
+		for _, b := range [][]byte{models.BucketUsers, models.BucketSessions, models.BucketChats, models.BucketShares} {
 			if _, err := tx.CreateBucketIfNotExists(b); err != nil {
 				return err
 			}

@@ -12,6 +12,7 @@ type User struct {
 	Password string   `json:"password"`
 	Sessions []string `json:"sessions"`
 	Chats    []string `json:"chats"`
+	Shares   []string `json:"shares"`
 }
 
 // Create a new user
@@ -26,6 +27,8 @@ func NewUser(name, username, password string) (*User, error) {
 		Username: username,
 		Password: h,
 		Sessions: []string{},
+		Chats: []string{},
+		Shares: []string{},
 	}, nil
 }
 
@@ -84,6 +87,21 @@ func (u *User) RemoveChat(id string) {
 	for i, chat := range u.Chats {
 		if chat == id {
 			u.Chats = append(u.Chats[:i], u.Chats[i+1:]...)
+			break
+		}
+	}
+}
+
+// Associate a shared file with user
+func (u *User) AddShare(id string) {
+	u.Shares = append(u.Shares, id)
+}
+
+// Disassociate a user from the share
+func (u *User) RemoveShare(id string) {
+	for i, share := range u.Shares {
+		if share == id {
+			u.Shares = append(u.Shares[:i], u.Shares[i+1:]...)
 			break
 		}
 	}
