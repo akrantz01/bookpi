@@ -10,6 +10,7 @@ type config struct {
 	Port           string
 	Database       string
 	FilesDirectory string
+	Reset          bool
 }
 
 func loadEnv() (cfg config) {
@@ -19,6 +20,7 @@ func loadEnv() (cfg config) {
 		Port:           os.Getenv("PORT"),
 		Database:       os.Getenv("DATABASE"),
 		FilesDirectory: os.Getenv("FILES_DIR"),
+		Reset:          false,
 	}
 
 	// Set defaults if not exist
@@ -33,6 +35,9 @@ func loadEnv() (cfg config) {
 	}
 	if cfg.FilesDirectory == "" {
 		cfg.FilesDirectory = "./files"
+	}
+	if reset := os.Getenv("RESET"); reset == "YES" || reset == "yes" {
+		cfg.Reset = true
 	}
 
 	// Set path as absolute

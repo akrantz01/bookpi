@@ -25,6 +25,16 @@ func main() {
 	}
 	cfg := loadEnv()
 
+	// Delete old if resetting
+	if cfg.Reset {
+		if err := os.RemoveAll(cfg.FilesDirectory); err != nil {
+			log.Fatalf("Failed to delete files directory: %v\n", err)
+		}
+		if err := os.Remove(cfg.Database); err != nil {
+			log.Fatalf("Failed to delete database: %v\n", err)
+		}
+	}
+
 	// Initialize file storage directory
 	if err := os.MkdirAll(cfg.FilesDirectory, os.ModeDir|0755); err != nil {
 		log.Fatalf("Failed to create files directory: %v\n", err)
