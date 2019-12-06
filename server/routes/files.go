@@ -44,7 +44,7 @@ func fileRouter(filesDirectory string) func(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-// List all files in a directory or a file's information
+// List all files in a directory or a file's information, or download a file
 func listFiles(w http.ResponseWriter, r *http.Request, path string) {
 	// Get file statistics
 	info, err := os.Stat(path)
@@ -59,6 +59,12 @@ func listFiles(w http.ResponseWriter, r *http.Request, path string) {
 
 	// Return file info if file
 	if !info.IsDir() {
+		// Download file if query param
+		if r.URL.Query().Get("download") != "" {
+			http.ServeFile(w, r, path)
+			return
+		}
+
 		responses.SuccessWithData(w, map[string]interface{}{
 			"name": info.Name(),
 			"size": info.Size(),
