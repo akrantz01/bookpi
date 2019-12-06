@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"github.com/akrantz01/bookpi/server/models"
 	"github.com/akrantz01/bookpi/server/routes"
 	"github.com/gorilla/mux"
@@ -85,6 +86,10 @@ func main() {
 		log.Printf("Listening on %s:%s...\n", cfg.Host, cfg.Port)
 
 		if err := server.ListenAndServe(); err != nil {
+			if err == errors.New("http: server closed") {
+				return
+			}
+
 			log.Fatalf("Error while running server: %v\n", err)
 		}
 	}()
