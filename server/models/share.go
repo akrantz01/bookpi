@@ -2,33 +2,30 @@ package models
 
 import (
 	"encoding/json"
-	uuid "github.com/satori/go.uuid"
 	bolt "go.etcd.io/bbolt"
 )
 
 type Share struct {
-	Id uuid.UUID `json:"-"`
-	File string `json:"file"`
-	From string `json:"from"`
+	Path string   `json:"-"`
+	To   []string `json:"to"`
 }
 
 // Create a new file share
-func NewShare(file, user string) *Share {
+func NewShare(file string) *Share {
 	return &Share{
-		Id: uuid.NewV4(),
-		From: user,
-		File: file,
+		Path: file,
+		To: []string{},
 	}
 }
 
 // Find a file share by id
-func FindShare(id uuid.UUID, db *bolt.DB) (*Share, error) {
+func FindShare(path string, db *bolt.DB) (*Share, error) {
 	var share Share
 	err := db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket(BucketShares)
 
 		// Decode share
-		buf := bucket.Get(id.Bytes())
+		buf := bucket.Get([]byte(path))
 		return json.Unmarshal(buf, &share)
 	})
 
@@ -36,7 +33,7 @@ func FindShare(id uuid.UUID, db *bolt.DB) (*Share, error) {
 	case *json.SyntaxError:
 		return nil, nil
 	case nil:
-		share.Id = id
+		share.Path = path
 		return &share, nil
 	default:
 		return nil, err
@@ -54,14 +51,29 @@ func (s *Share) Save(db *bolt.DB) error {
 			return err
 		}
 
-		return bucket.Put(s.Id.Bytes(), buf)
+		return bucket.Put([]byte(s.Path), buf)
 	})
+}
+
+// Add user to shared file
+func (s *Share) AddUser(user string) {
+	s.To = append(s.To, user)
+}
+
+// Remove user from shared file
+func (s *Share) RemoveUser(user string) {
+	for i, u := range s.To {
+		if u == user {
+			s.To = append(s.To[:i], s.To[i+1:]...)
+			break
+		}
+	}
 }
 
 // Delete a share from the database
 func (s *Share) Delete(db *bolt.DB) error {
 	return db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket(BucketShares)
-		return bucket.Delete(s.Id.Bytes())
+		return bucket.Delete([]byte(s.Path))
 	})
 }

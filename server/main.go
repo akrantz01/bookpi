@@ -66,6 +66,7 @@ func main() {
 	routes.Chats(db, api)
 	routes.Messages(db, api)
 	routes.Files(cfg.FilesDirectory, api)
+	routes.Shares(cfg.FilesDirectory, db, api)
 
 	// Register session middleware
 	router.Use(sessionMiddleware(db))

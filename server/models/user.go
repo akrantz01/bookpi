@@ -15,6 +15,11 @@ type User struct {
 	Shares   []string `json:"shares"`
 }
 
+// Shares stores:
+//   key: id
+//   - path -> path to file
+//   - user -> user shared by
+
 // Create a new user
 func NewUser(name, username, password string) (*User, error) {
 	h, err := hash.DefaultHash(password)
@@ -92,15 +97,15 @@ func (u *User) RemoveChat(id string) {
 	}
 }
 
-// Associate a shared file with user
-func (u *User) AddShare(id string) {
-	u.Shares = append(u.Shares, id)
+// Associate a shared link with the user
+func (u *User) AddShare(path string) {
+	u.Shares = append(u.Shares, path)
 }
 
-// Disassociate a user from the share
-func (u *User) RemoveShare(id string) {
+// Disassociate a user from a shared link
+func (u *User) RemoveShare(path string) {
 	for i, share := range u.Shares {
-		if share == id {
+		if share == path {
 			u.Shares = append(u.Shares[:i], u.Shares[i+1:]...)
 			break
 		}
