@@ -16,7 +16,15 @@ import (
 // Apply the wrapper functions
 func applyWrappers(router *mux.Router) http.Handler {
 	logging := handlers.CombinedLoggingHandler(os.Stdout, router)
-	corsEnabled := cors.AllowAll().Handler(logging)
+
+        corsEnabled := cors.New(cors.Options{
+                AllowCredentials: true,
+                OptionsPassthrough: false,
+                Debug: false,
+                AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
+                AllowedHeaders: []string{"*"},
+                AllowedOrigins: []string{"http://localhost:*", "http://book.pi", "https://book.pi"},
+        }).Handler(logging)
 	return corsEnabled
 }
 
