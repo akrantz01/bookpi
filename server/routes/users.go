@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 // Routes for user management
@@ -185,6 +186,16 @@ func deleteUser(w http.ResponseWriter, r *http.Request, _ *models.Session, files
 		responses.Error(w, http.StatusInternalServerError, "failed to delete from database")
 		return
 	}
+
+        // Set empty cookie
+	http.SetCookie(w, &http.Cookie{
+		Name:     "bp-id",
+		Value:    "",
+		Path:     "/",
+		Expires:  time.Unix(0, 0),
+		Secure:   false,
+		HttpOnly: true,
+	})
 
 	responses.Success(w)
 }
