@@ -36,6 +36,9 @@ class Header extends Component {
                             <li className="nav-item">
                                 <Link className="nav-link" to="/chat">{ (location.pathname === "/chat") ? <b>Chat</b> : "Chat" }</Link>
                             </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/account">{ (location.pathname === "/account") ? <b>Account</b> : "Account" }</Link>
+                            </li>
                         </ul>
 
                         <form className="form-inline mr-sm-2">
