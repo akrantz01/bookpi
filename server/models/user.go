@@ -32,8 +32,8 @@ func NewUser(name, username, password string) (*User, error) {
 		Username: username,
 		Password: h,
 		Sessions: []string{},
-		Chats: []string{},
-		Shares: []string{},
+		Chats:    []string{},
+		Shares:   []string{},
 	}, nil
 }
 

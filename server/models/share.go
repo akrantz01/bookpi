@@ -14,7 +14,7 @@ type Share struct {
 func NewShare(file string) *Share {
 	return &Share{
 		Path: file,
-		To: []string{},
+		To:   []string{},
 	}
 }
 

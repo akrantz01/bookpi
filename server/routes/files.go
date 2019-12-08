@@ -66,10 +66,10 @@ func listFiles(w http.ResponseWriter, r *http.Request, path string) {
 		}
 
 		responses.SuccessWithData(w, map[string]interface{}{
-			"name": info.Name(),
-			"size": info.Size(),
+			"name":          info.Name(),
+			"size":          info.Size(),
 			"last_modified": info.ModTime().Unix(),
-			"directory": info.IsDir(),
+			"directory":     info.IsDir(),
 		})
 		return
 	}
@@ -86,10 +86,10 @@ func listFiles(w http.ResponseWriter, r *http.Request, path string) {
 	var children []map[string]interface{}
 	for _, file := range files {
 		children = append(children, map[string]interface{}{
-			"name": file.Name(),
-			"size": file.Size(),
+			"name":          file.Name(),
+			"size":          file.Size(),
 			"last_modified": file.ModTime().Unix(),
-			"directory": file.IsDir(),
+			"directory":     file.IsDir(),
 		})
 	}
 
@@ -101,12 +101,12 @@ func listFiles(w http.ResponseWriter, r *http.Request, path string) {
 	rawPath := filepath.Clean(strings.TrimPrefix(r.RequestURI, "/api/files"))
 
 	responses.SuccessWithData(w, map[string]interface{}{
-		"name": info.Name(),
-		"size": info.Size(),
+		"name":          info.Name(),
+		"size":          info.Size(),
 		"last_modified": info.ModTime().Unix(),
-		"directory": info.IsDir(),
-		"root": rawPath == "/" || rawPath == ".",
-		"children": children,
+		"directory":     info.IsDir(),
+		"root":          rawPath == "/" || rawPath == ".",
+		"children":      children,
 	})
 }
 
@@ -177,7 +177,7 @@ func createFile(w http.ResponseWriter, r *http.Request, path string) {
 	}()
 
 	// Check file doesn't already exist
-	if _, err := os.Stat(path+"/"+handler.Filename); err == nil {
+	if _, err := os.Stat(path + "/" + handler.Filename); err == nil {
 		responses.Error(w, http.StatusConflict, "file already exists")
 		return
 	} else if !os.IsNotExist(err) {
@@ -228,9 +228,9 @@ func updateFile(w http.ResponseWriter, r *http.Request, path, filesDirectory str
 	}
 
 	// Parse and validate body fields
-	var body struct{
+	var body struct {
 		Filename string `json:"filename"`
-		Path string `json:"path"`
+		Path     string `json:"path"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		responses.Error(w, http.StatusBadRequest, "invalid json format for request body")

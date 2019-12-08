@@ -173,7 +173,7 @@ func deleteUser(w http.ResponseWriter, r *http.Request, _ *models.Session, files
 	}
 
 	// Delete the user's files
-	if err := os.RemoveAll(filesDirectory+"/"+user.Username); err != nil {
+	if err := os.RemoveAll(filesDirectory + "/" + user.Username); err != nil {
 		log.Printf("ERROR: failed to delete user file storage directory: %v\n", err)
 		responses.Error(w, http.StatusInternalServerError, "failed to delete directory")
 		return

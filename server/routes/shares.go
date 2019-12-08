@@ -64,9 +64,9 @@ func createShare(w http.ResponseWriter, r *http.Request, filesDirectory string, 
 	}
 
 	// Parse and validate body fields
-	var body struct{
+	var body struct {
 		File string `json:"file"`
-		To string `json:"to"`
+		To   string `json:"to"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		responses.Error(w, http.StatusBadRequest, "invalid json format for request body")
