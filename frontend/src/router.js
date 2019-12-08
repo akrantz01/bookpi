@@ -24,6 +24,7 @@ class Router extends Component {
     componentDidMount() {
         Users.readSelf().then(data => {
             if (data.status === 200) this.setState({ loggedIn: true, user: data.data, loading: false });
+            else this.setState({ loading: false });
         });
     }
 
