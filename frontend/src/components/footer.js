@@ -1,20 +1,27 @@
 import React, { Component } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 
 class Footer extends Component {
     render() {
+        if (this.props.location.pathname === "/sign-in" || this.props.location.pathname === "/sign-up") return (<></>);
+
         return (
-            <footer style={{ position: "absolute", bottom: 0, width: "100%", lineHeight: "45px", backgroundColor: "#f5f5f5"}}>
-                <Container>
-                    <Row className="justify-content-between">
-                        <Col md>
+            <footer style={{ position: "absolute", bottom: 0, left: 0, width: "100%", lineHeight: "45px", backgroundColor: "#f5f5f5"}}>
+                <div className="container">
+                    <div className="row justify-content-between">
+                        <div className="col-md">
                             <p className="text-muted" style={{ marginBottom: 0 }}>BookPi &copy; <a style={{ color: "darkgray" }} href="https://krantz.dev" target="_blank" rel="noopener noreferrer">Alexander Krantz</a> 2019</p>
-                        </Col>
-                    </Row>
-                </Container>
+                        </div>
+                    </div>
+                </div>
             </footer>
         )
     }
 }
 
-export default Footer;
+Footer.propTypes = {
+    location: PropTypes.object,
+};
+
+export default withRouter(Footer);

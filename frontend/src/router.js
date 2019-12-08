@@ -3,6 +3,7 @@ import {HashRouter, Switch, Route} from 'react-router-dom';
 
 import Header from "./components/header";
 import Footer from "./components/footer";
+
 import Home from './pages/home';
 
 class Router extends Component {
@@ -11,7 +12,7 @@ class Router extends Component {
 
         this.state = {
             loggedIn: false,
-            user: {}
+            user: {},
         }
     }
 
@@ -21,7 +22,7 @@ class Router extends Component {
         return (
             <HashRouter>
                 <Header loggedIn={this.state.loggedIn} toggleLogin={this.toggleLogin.bind(this)}/>
-                <main role="main" className="flex-shrink-0" style={{ marginTop: "65px" }}>
+                <main role="main" className="flex-shrink-0" style={{ marginTop: "40px" }}>
                     <Switch>
                         <Route path="/" exact><Home/></Route>
                     </Switch>

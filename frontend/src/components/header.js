@@ -5,6 +5,9 @@ import { Link, withRouter } from 'react-router-dom';
 class Header extends Component {
     render() {
         let { location, loggedIn } = this.props;
+
+        if (location.pathname === "/sign-in" || location.pathname === "/sign-up") return (<></>);
+
         return (
             <header>
                 <nav className="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
