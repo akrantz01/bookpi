@@ -30,15 +30,19 @@ class Header extends Component {
                             <li className="nav-item">
                                 <Link className="nav-link" to="/">{ (location.pathname === "/") ? <b>Home</b> : "Home" }</Link>
                             </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/files">{ (location.pathname === "/files") ? <b>Files</b> : "Files" }</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/chat">{ (location.pathname === "/chat") ? <b>Chat</b> : "Chat" }</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/account">{ (location.pathname === "/account") ? <b>Account</b> : "Account" }</Link>
-                            </li>
+                            { loggedIn && (
+                                <>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/chat">{ (location.pathname === "/chat") ? <b>Chat</b> : "Chat" }</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/files">{ (location.pathname === "/files") ? <b>Files</b> : "Files" }</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/account">{ (location.pathname === "/account") ? <b>Account</b> : "Account" }</Link>
+                                    </li>
+                                </>
+                            )}
                         </ul>
 
                         <form className="form-inline mr-sm-2">
