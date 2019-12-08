@@ -27,7 +27,14 @@ class Router extends Component {
         });
     }
 
-    toggleLogin = () => this.setState({ loggedIn: !this.state.loggedIn });
+    login() {
+        this.setState({ loggedIn: true, loading: true });
+        Users.readSelf().then(data => {
+            if (data.status === 200) this.setState({ user: data.data, loading: false });
+        });
+    }
+    logout = () => this.setState({ loggedIn: false, user: {} });
+
     toggleLoading = () => this.setState({ loading: !this.state.loading });
 
     render() {
@@ -40,11 +47,11 @@ class Router extends Component {
         return (
             <HashRouter>
                 <ToastContainer position="bottom-right" autoClose={4000} closeOnClick pauseOnHover draggable transition={Flip}/>
-                <Header loggedIn={this.state.loggedIn} toggleLogin={this.toggleLogin.bind(this)}/>
+                <Header loggedIn={this.state.loggedIn} logout={this.logout.bind(this)}/>
                 <main role="main" className="flex-shrink-0" style={{ marginTop: "40px" }}>
                     <Switch>
                         <Route path="/" exact><Home/></Route>
-                        <Route path="/sign-in" exact><SignIn toggleLogin={this.toggleLogin.bind(this)}/></Route>
+                        <Route path="/sign-in" exact><SignIn login={this.login.bind(this)} loggedIn={this.state.loggedIn} /></Route>
                     </Switch>
                 </main>
                 <Footer/>

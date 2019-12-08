@@ -16,13 +16,17 @@ class SignIn extends Component {
         }
     }
 
+    componentDidMount() {
+        if (this.props.loggedIn) this.props.history.push("/");
+    }
+
     onUsernameInput = event => this.setState({ username: event.target.value });
     onPasswordInput = event => this.setState({ password: event.target.value });
 
     onSubmit = () => Authentication.login(this.state.username, this.state.password).then(data => {
         if (data.status === 200) {
-            this.props.toggleLogin();
-            this.props.history.back();
+            this.props.login();
+            this.props.history.goBack();
             toast.success("Successfully logged in");
         }
         else toast.error(data.reason);
@@ -48,8 +52,9 @@ class SignIn extends Component {
 }
 
 SignIn.propTypes = {
-    toggleLogin: PropTypes.func,
-    history: PropTypes.object
+    login: PropTypes.func,
+    history: PropTypes.object,
+    loggedIn: PropTypes.bool
 };
 
 export default withRouter(SignIn);

@@ -42,6 +42,8 @@ async function downloadFile(path, response) {
     return { status: response.status };
 }
 
+const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
+
 class Authentication {
     static async register(username, password, name) {
         let response = await request({
@@ -52,7 +54,7 @@ class Authentication {
         });
 
         if (response.data.status === "success") return { status: response.status };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async login(username, password) {
         let response = await request({
@@ -63,7 +65,7 @@ class Authentication {
         });
 
         if (response.data.status === "success") return { status: response.status };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async logout() {
         let response = await request({
@@ -72,7 +74,7 @@ class Authentication {
         });
 
         if (response.data.status === "success") return { status: response.status };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
 }
 
@@ -84,7 +86,7 @@ class Users {
         });
 
         if (response.data.status === "success") return { status: response.status, data: response.data.data };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async readSelf() {
         let response = await request({
@@ -93,7 +95,7 @@ class Users {
         });
 
         if (response.data.status === "success") return { status: response.status, data: response.data.data };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async update(name, password) {
         let response = await request({
@@ -104,7 +106,7 @@ class Users {
         });
 
         if (response.data.status === "success") return { status: response.status };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async delete() {
         let response = await request({
@@ -113,7 +115,7 @@ class Users {
         });
 
         if (response.data.status === "success") return { status: response.status };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
 }
 
@@ -125,7 +127,7 @@ class Chats {
         });
 
         if (response.data.status === "success") return { status: response.status, data: response.data.data };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async create(to, message) {
         let response = await request({
@@ -136,7 +138,7 @@ class Chats {
         });
 
         if (response.data.status === "success") return { status: response.status };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async read(id) {
         let response = await request({
@@ -145,7 +147,7 @@ class Chats {
         });
 
         if (response.data.status === "success") return { status: response.status, data: response.data.data };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async delete(id) {
         let response = await request({
@@ -154,7 +156,7 @@ class Chats {
         });
 
         if (response.data.status === "success") return { status: response.status };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
 }
 
@@ -166,7 +168,7 @@ class Messages {
         });
 
         if (response.data.status === "success") return { status: response.status, data: response.data.data };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async create(id, message) {
         let response = await request({
@@ -177,7 +179,7 @@ class Messages {
         });
 
         if (response.data.status === "success") return { status: response.status };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
 }
 
@@ -193,7 +195,7 @@ class Files {
         if (download) return await downloadFile(path, response);
 
         if (response.data.status === "success") return { status: response.status, data: response.data.data };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async create(path, file, directory=false, progressFunc=null) {
         let form = new FormData();
@@ -209,7 +211,7 @@ class Files {
         });
 
         if (response.data.status === "success") return { status: response.status };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async update(path, new_filename, new_path) {
         let response = await request({
@@ -220,7 +222,7 @@ class Files {
         });
 
         if (response.data.status === "success") return { status: response.status };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async delete(path) {
         let response = await request({
@@ -229,7 +231,7 @@ class Files {
         });
 
         if (response.data.status === "success") return { status: response.status, data: response.data.data };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
 }
 
@@ -241,7 +243,7 @@ class Shares {
         });
 
         if (response.data.status === "success") return { status: response.status, data: response.data.data };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async create(file, to) {
         let response = await request({
@@ -252,7 +254,7 @@ class Shares {
         });
 
         if (response.data.status === "success") return { status: response.status };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
     static async download(user, file, describe=false) {
         let response = await request({
@@ -264,7 +266,7 @@ class Shares {
 
         if (describe) {
             if (response.data.status === "success") return { status: response.status, data: response.data.data };
-            return { status: response.status, reason: response.data.reason };
+            return { status: response.status, reason: capitalize(response.data.reason) };
         }
 
         return await downloadFile(file, response);
@@ -276,7 +278,7 @@ class Shares {
         });
 
         if (response.data.status === "success") return { status: response.status };
-        return { status: response.status, reason: response.data.reason };
+        return { status: response.status, reason: capitalize(response.data.reason) };
     }
 }
 

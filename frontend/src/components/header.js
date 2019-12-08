@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
+import { Authentication } from "../api";
+import {toast} from "react-toastify";
 
 class Header extends Component {
+    signOut() {
+        Authentication.logout().then(data => {
+            if (data.status === 200) this.props.logout();
+            else toast(data.reason);
+        })
+    }
+
     render() {
         let { location, loggedIn } = this.props;
 
@@ -37,7 +46,7 @@ class Header extends Component {
                                     <button className="btn btn-outline-primary" type="button">Sign Up</button>
                                 </>
                             )}
-                            { loggedIn && <button className="btn btn-outline-light" type="button" onClick={this.props.toggleLogin}>Sign out</button> }
+                            { loggedIn && <button className="btn btn-outline-light" type="button" onClick={this.signOut.bind(this)}>Sign out</button> }
                         </form>
                     </div>
                 </nav>
@@ -48,7 +57,7 @@ class Header extends Component {
 
 Header.propTypes = {
     loggedIn: PropTypes.bool,
-    toggleLogin: PropTypes.func,
+    logout: PropTypes.func,
     location: PropTypes.object
 };
 
