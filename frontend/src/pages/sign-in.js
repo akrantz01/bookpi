@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Authentication } from "../api";
 
 import '../style/user-form.css'
@@ -36,7 +36,7 @@ class SignIn extends Component {
         return (
             <div className="text-center">
                 <form className="form-signin">
-                    <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
+                    <h1 className="h3 mb-3 font-weight-normal">Sign in to BookPi</h1>
 
                     <label htmlFor="username" className="sr-only">Username</label>
                     <input type="text" id="username" className="form-control form-top" placeholder="Username" onInput={this.onUsernameInput.bind(this)} required autoFocus/>
@@ -45,6 +45,9 @@ class SignIn extends Component {
                     <input type="password" id="password" className="form-control form-bottom" placeholder="Password" onInput={this.onPasswordInput.bind(this)} required/>
 
                     <button className="btn btn-lg btn-primary btn-block" type="submit" onClick={this.onSubmit.bind(this)}>Sign In</button>
+                    <br/>
+                    <p className="text-muted">Don't have an account? <Link to="/sign-up">Sign up!</Link></p>
+                    <p className="text-muted"><Link to="/" style={{ color: "#6c757d", fontSize: "14px" }}>Home</Link></p>
                 </form>
             </div>
         );
