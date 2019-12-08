@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { withRouter } from 'react-router-dom';
 import { Authentication } from "../api";
 
-import '../style/sign-in.css'
+import '../style/user-form.css'
 
 class SignIn extends Component {
     constructor(props) {
@@ -26,8 +26,8 @@ class SignIn extends Component {
     onSubmit = () => Authentication.login(this.state.username, this.state.password).then(data => {
         if (data.status === 200) {
             this.props.login();
-            this.props.history.goBack();
             toast.success("Successfully logged in");
+            this.props.history.push("/");
         }
         else toast.error(data.reason);
     });

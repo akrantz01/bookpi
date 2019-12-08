@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { HashRouter, Switch, Route } from 'react-router-dom';
-import { ToastContainer, Flip } from "react-toastify";
+import { ToastContainer, toast, Flip } from "react-toastify";
 
 import { Users } from './api';
 
@@ -9,6 +9,7 @@ import Footer from "./components/footer";
 
 import Home from './pages/home';
 import SignIn from './pages/sign-in';
+import SignUp from "./pages/sign-up";
 
 class Router extends Component {
     constructor(props) {
@@ -24,6 +25,9 @@ class Router extends Component {
     componentDidMount() {
         Users.readSelf().then(data => {
             if (data.status === 200) this.setState({ loggedIn: true, user: data.data, loading: false });
+            else if (data.status === 500) {
+                toast.error(data.reason);
+            }
             else this.setState({ loading: false });
         });
     }
@@ -32,6 +36,7 @@ class Router extends Component {
         this.setState({ loggedIn: true, loading: true });
         Users.readSelf().then(data => {
             if (data.status === 200) this.setState({ user: data.data, loading: false });
+            else toast.error(data.reason);
         });
     }
     logout = () => this.setState({ loggedIn: false, user: {} });
@@ -53,6 +58,7 @@ class Router extends Component {
                     <Switch>
                         <Route path="/" exact><Home/></Route>
                         <Route path="/sign-in" exact><SignIn login={this.login.bind(this)} loggedIn={this.state.loggedIn} /></Route>
+                        <Route path="/sign-up" exact><SignUp loggedIn={this.state.loggedIn} /></Route>
                     </Switch>
                 </main>
                 <Footer/>

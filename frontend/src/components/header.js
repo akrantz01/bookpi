@@ -43,7 +43,7 @@ class Header extends Component {
                                 <>
                                     <button className="btn btn-outline-success" type="button" onClick={() => this.props.history.push("/sign-in")}>Sign In</button>
                                     <span className="text-muted" style={{ marginLeft: "5px", marginRight: "5px" }}>|</span>
-                                    <button className="btn btn-outline-primary" type="button">Sign Up</button>
+                                    <button className="btn btn-outline-primary" type="button" onClick={() => this.props.history.push("/sign-up")}>Sign Up</button>
                                 </>
                             )}
                             { loggedIn && <button className="btn btn-outline-light" type="button" onClick={this.signOut.bind(this)}>Sign out</button> }
