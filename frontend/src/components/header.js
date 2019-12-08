@@ -32,7 +32,7 @@ class Header extends Component {
                         <form className="form-inline mr-sm-2">
                             { !loggedIn && (
                                 <>
-                                    <button className="btn btn-outline-success" type="button" onClick={this.props.toggleLogin}>Sign In</button>
+                                    <button className="btn btn-outline-success" type="button" onClick={() => this.props.history.push("/sign-in")}>Sign In</button>
                                     <span className="text-muted" style={{ marginLeft: "5px", marginRight: "5px" }}>|</span>
                                     <button className="btn btn-outline-primary" type="button">Sign Up</button>
                                 </>

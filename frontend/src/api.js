@@ -39,7 +39,7 @@ async function downloadFile(path, response) {
     link.remove();
     window.URL.revokeObjectURL(url);
 
-    return true;
+    return { status: response.status };
 }
 
 class Authentication {
@@ -51,8 +51,8 @@ class Authentication {
             headers: { "Content-Type": "application/json" }
         });
 
-        if (response.data.status === "success") return true;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status };
+        return { status: response.status, reason: response.data.reason };
     }
     static async login(username, password) {
         let response = await request({
@@ -62,8 +62,8 @@ class Authentication {
             headers: { "Content-Type": "application/json" }
         });
 
-        if (response.data.status === "success") return true;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status };
+        return { status: response.status, reason: response.data.reason };
     }
     static async logout() {
         let response = await request({
@@ -71,49 +71,49 @@ class Authentication {
             method: "get"
         });
 
-        if (response.data.status === "success") return true;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status };
+        return { status: response.status, reason: response.data.reason };
     }
 }
 
 class Users {
     static async read(username) {
         let response = await request({
-            url: `/users/${username}`,
+            url: `/user/${username}`,
             method: "get"
         });
 
-        if (response.data.status === "success") return response.data.data;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status, data: response.data.data };
+        return { status: response.status, reason: response.data.reason };
     }
     static async readSelf() {
         let response = await request({
-            url: "/users",
+            url: "/user",
             method: "get"
         });
 
-        if (response.data.status === "success") return response.data.data;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status, data: response.data.data };
+        return { status: response.status, reason: response.data.reason };
     }
     static async update(name, password) {
         let response = await request({
-            url: "/users",
+            url: "/user",
             method: "put",
             data: { name, password },
             headers: { "Content-Type": "application/json" }
         });
 
-        if (response.data.status === "success") return true;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status };
+        return { status: response.status, reason: response.data.reason };
     }
     static async delete() {
         let response = await request({
-            url: "/users",
+            url: "/user",
             method: "delete"
         });
 
-        if (response.data.status === "success") return true;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status };
+        return { status: response.status, reason: response.data.reason };
     }
 }
 
@@ -124,8 +124,8 @@ class Chats {
             method: "get"
         });
 
-        if (response.data.status === "success") return response.data.data;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status, data: response.data.data };
+        return { status: response.status, reason: response.data.reason };
     }
     static async create(to, message) {
         let response = await request({
@@ -135,8 +135,8 @@ class Chats {
             headers: { "Content-Type": "application/json" }
         });
 
-        if (response.data.status === "success") return true;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status };
+        return { status: response.status, reason: response.data.reason };
     }
     static async read(id) {
         let response = await request({
@@ -144,8 +144,8 @@ class Chats {
             method: "get"
         });
 
-        if (response.data.status === "success") return response.data.data;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status, data: response.data.data };
+        return { status: response.status, reason: response.data.reason };
     }
     static async delete(id) {
         let response = await request({
@@ -153,8 +153,8 @@ class Chats {
             method: "delete"
         });
 
-        if (response.data.status === "success") return true;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status };
+        return { status: response.status, reason: response.data.reason };
     }
 }
 
@@ -165,8 +165,8 @@ class Messages {
             method: "get"
         });
 
-        if (response.data.status === "success") return response.data.data;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status, data: response.data.data };
+        return { status: response.status, reason: response.data.reason };
     }
     static async create(id, message) {
         let response = await request({
@@ -176,8 +176,8 @@ class Messages {
             headers: { "Content-Type": "application/json" }
         });
 
-        if (response.data.status === "success") return true;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status };
+        return { status: response.status, reason: response.data.reason };
     }
 }
 
@@ -192,8 +192,8 @@ class Files {
 
         if (download) return await downloadFile(path, response);
 
-        if (response.data.status === "success") return response.data.data;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status, data: response.data.data };
+        return { status: response.status, reason: response.data.reason };
     }
     static async create(path, file, directory=false, progressFunc=null) {
         let form = new FormData();
@@ -208,8 +208,8 @@ class Files {
             onUploadProgress: progressFunc,
         });
 
-        if (response.data.status === "success") return true;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status };
+        return { status: response.status, reason: response.data.reason };
     }
     static async update(path, new_filename, new_path) {
         let response = await request({
@@ -219,8 +219,8 @@ class Files {
             headers: { "Content-Type": "application/json" }
         });
 
-        if (response.data.status === "success") return true;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status };
+        return { status: response.status, reason: response.data.reason };
     }
     static async delete(path) {
         let response = await request({
@@ -228,8 +228,8 @@ class Files {
             method: "delete"
         });
 
-        if (response.data.status === "success") return response.data.data;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status, data: response.data.data };
+        return { status: response.status, reason: response.data.reason };
     }
 }
 
@@ -240,8 +240,8 @@ class Shares {
             method: "get"
         });
 
-        if (response.data.status === "success") return response.data.data;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status, data: response.data.data };
+        return { status: response.status, reason: response.data.reason };
     }
     static async create(file, to) {
         let response = await request({
@@ -251,8 +251,8 @@ class Shares {
             headers: { "Content-Type": "application/json" }
         });
 
-        if (response.data.status === "success") return true;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status };
+        return { status: response.status, reason: response.data.reason };
     }
     static async download(user, file, describe=false) {
         let response = await request({
@@ -263,8 +263,8 @@ class Shares {
         });
 
         if (describe) {
-            if (response.data.status === "success") return response.data.data;
-            return response.data.reason;
+            if (response.data.status === "success") return { status: response.status, data: response.data.data };
+            return { status: response.status, reason: response.data.reason };
         }
 
         return await downloadFile(file, response);
@@ -275,8 +275,8 @@ class Shares {
             method: "delete"
         });
 
-        if (response.data.status === "success") return true;
-        return response.data.reason;
+        if (response.data.status === "success") return { status: response.status };
+        return { status: response.status, reason: response.data.reason };
     }
 }
 
