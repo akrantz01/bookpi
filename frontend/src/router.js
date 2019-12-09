@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { HashRouter, Switch, Route } from 'react-router-dom';
 import { ToastContainer, toast, Flip } from "react-toastify";
 
-import { Users, Authentication, Shares, Files, Messages, Chats } from './api';
+import { Users } from './api';
 
 import Header from "./components/header";
 import Footer from "./components/footer";
@@ -12,6 +12,7 @@ import SignIn from './pages/sign-in';
 import SignUp from "./pages/sign-up";
 import NotFound from "./pages/not-found";
 import Chat from "./pages/chat";
+import Account from "./pages/account";
 
 class Router extends Component {
     constructor(props) {
@@ -22,8 +23,6 @@ class Router extends Component {
             loading: true,
             user: {}
         };
-
-        this.api = { Users, Authentication, Shares, Files, Messages, Chats };
     }
 
     componentDidMount() {
@@ -36,6 +35,8 @@ class Router extends Component {
         });
     }
 
+    updateUser = name => this.setState({ user: {...this.state.user, name } });
+
     login() {
         this.setState({ loggedIn: true, loading: true });
         Users.readSelf().then(data => {
@@ -44,8 +45,6 @@ class Router extends Component {
         });
     }
     logout = () => this.setState({ loggedIn: false, user: {} });
-
-    toggleLoading = () => this.setState({ loading: !this.state.loading });
 
     render() {
         if (this.state.loading) return (
@@ -64,6 +63,7 @@ class Router extends Component {
                         <Route path="/sign-in" exact><SignIn login={this.login.bind(this)} loggedIn={this.state.loggedIn} /></Route>
                         <Route path="/sign-up" exact><SignUp loggedIn={this.state.loggedIn} /></Route>
                         <Route path="/chat" exact><Chat loggedIn={this.state.loggedIn} username={this.state.user.username} /></Route>
+                        <Route path="/account" exact><Account loggedIn={this.state.loggedIn} user={this.state.user} updateName={this.updateUser.bind(this)} /></Route>
                         <Route path="*"><NotFound/></Route>
                     </Switch>
                 </main>
