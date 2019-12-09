@@ -34,7 +34,7 @@ class SignIn extends Component {
 
     render() {
         return (
-            <div className="text-center">
+            <div style={{ alignItems: "center" }} className="text-center">
                 <form className="form-signin">
                     <h1 className="h3 mb-3 font-weight-normal">Sign in to BookPi</h1>
 

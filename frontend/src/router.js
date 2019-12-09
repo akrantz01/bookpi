@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { HashRouter, Switch, Route } from 'react-router-dom';
 import { ToastContainer, toast, Flip } from "react-toastify";
 
-import { Users } from './api';
+import { Users, Authentication, Shares, Files, Messages, Chats } from './api';
 
 import Header from "./components/header";
 import Footer from "./components/footer";
@@ -11,6 +11,7 @@ import Home from './pages/home';
 import SignIn from './pages/sign-in';
 import SignUp from "./pages/sign-up";
 import NotFound from "./pages/not-found";
+import Chat from "./pages/chat";
 
 class Router extends Component {
     constructor(props) {
@@ -21,6 +22,8 @@ class Router extends Component {
             loading: true,
             user: {}
         };
+
+        this.api = { Users, Authentication, Shares, Files, Messages, Chats };
     }
 
     componentDidMount() {
@@ -46,7 +49,7 @@ class Router extends Component {
 
     render() {
         if (this.state.loading) return (
-            <div className="spinner-border text-info" style={{ position: "absolute", top: "40%" }} role="status">
+            <div className="spinner-border text-info" style={{ position: "absolute", top: "40%", right: "50%" }} role="status">
                 <span className="sr-only">Loading...</span>
             </div>
         );
@@ -60,6 +63,7 @@ class Router extends Component {
                         <Route path="/" exact><Home/></Route>
                         <Route path="/sign-in" exact><SignIn login={this.login.bind(this)} loggedIn={this.state.loggedIn} /></Route>
                         <Route path="/sign-up" exact><SignUp loggedIn={this.state.loggedIn} /></Route>
+                        <Route path="/chat" exact><Chat loggedIn={this.state.loggedIn} username={this.state.user.username} /></Route>
                         <Route path="*"><NotFound/></Route>
                     </Switch>
                 </main>
