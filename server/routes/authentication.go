@@ -19,7 +19,7 @@ var (
 	regexLowercase = regexp.MustCompile("[a-z]+")
 	regexUppercase = regexp.MustCompile("[A-Z]")
 	regexNumeric   = regexp.MustCompile("[0-9]+")
-	regexSpecial   = regexp.MustCompile("[!-/:-@\[-_]+")
+	regexSpecial   = regexp.MustCompile("[!-/:-@[-_]+")
 )
 
 // Handle user authentication

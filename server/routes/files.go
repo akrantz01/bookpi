@@ -98,7 +98,7 @@ func listFiles(w http.ResponseWriter, r *http.Request, path string) {
 		children = []map[string]interface{}{}
 	}
 
-	rawPath := filepath.Clean(strings.TrimPrefix(r.RequestURI, "/api/files"))
+	rawPath := filepath.Clean(strings.TrimPrefix(r.URL.Path, "/api/files"))
 
 	responses.SuccessWithData(w, map[string]interface{}{
 		"name":          info.Name(),
