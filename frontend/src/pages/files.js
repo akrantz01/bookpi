@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Files, Shares } from '../api';
-import {DirectoryEntry, FileEntry} from "../components/entries";
+import Entry from "../components/entry";
 
 const style = {
     breadcrumb: {
@@ -93,11 +93,8 @@ class FileManager extends Component {
                                     </div>
                                 )}
                                 { !this.state.loadingFiles && !this.state.children && <h6>You have no files!</h6> }
-                                { !this.state.loadingFiles && this.state.children && this.state.children.map(
-                                    data => (data.directory) ?
-                                        <DirectoryEntry key={Math.random().toString()} directory={data} onClick={this.downDirectory(data.name)}/> :
-                                        <FileEntry key={Math.random().toString()} file={data}/>
-                                )}
+                                { !this.state.loadingFiles && this.state.children &&
+                                    this.state.children.map(data => <Entry data={data} onClick={this.downDirectory(data.name)} key={Math.random().toString()}/>)}
                             </div>
                         </div>
                     </div>
