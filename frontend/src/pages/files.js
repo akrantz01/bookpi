@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Files, Shares } from '../api';
+import { Files } from '../api';
 import Entry from "../components/entry";
 
 const style = {
@@ -65,41 +65,35 @@ class FileManager extends Component {
 
         return (
             <div className="container">
-                <div className="row">
-                    <div className="col-sm-4">
-                        <div className="card" style={{ height: "85vh" }}>
-                            <div className="card-body">
+                <div className="card" style={{ height: "85vh" }}>
+                    <div className="card-header">
+                        <div className="row" style={{ marginBottom: "1rem" }}>
+                            <div className="col-sm">
                                 <h3 className="card-title">Files</h3>
-                                <button type="button" className="btn btn-sm btn-outline-primary" onClick={this.refreshFilesList.bind(this)}>Refresh</button>
-                                <div className="btn-group" role="group" aria-label="File options">
-                                    <button type="button" className="btn btn-sm btn-outline-success">Upload</button>
-                                    <button type="button" className="btn btn-sm btn-outline-info">New Folder</button>
-                                </div>
-                                <hr className="my-4"/>
-                                <div className="list-group list-group-flush">
-                                    <button type="button" className="list-group-item list-group-item-action">My Files</button>
-                                    <button type="button" className="list-group-item list-group-item-action">Shared Files</button>
+                            </div>
+                            <div className="col-sm text-right">
+                                <div className="btn-group" role="group" aria-label="File operations">
+                                    <button type="button" className="btn btn-outline-primary" onClick={this.refreshFilesList.bind(this)}>Refresh</button>
+                                    <button type="button" className="btn btn-outline-success">Upload</button>
+                                    <button type="button" className="btn btn-outline-info">New Folder</button>
                                 </div>
                             </div>
                         </div>
+
+                        <nav aria-label="breadcrumb">
+                            <ol className="breadcrumb">{ this.generateBreadcrumbs() }</ol>
+                        </nav>
                     </div>
-                    <div className="col-sm-8">
-                        <div className="card" style={{ height: "85vh" }}>
-                            <nav aria-label="breadcrumb">
-                                <ol className="breadcrumb">{ this.generateBreadcrumbs() }</ol>
-                            </nav>
-                            <div className="card-body" style={{ overflow: "auto", paddingTop: "0px" }}>
-                                { this.state.loadingFiles && (
-                                    <div className="spinner-border" role="status">
-                                        <span className="sr-only">Loading...</span>
-                                    </div>
-                                )}
-                                { !this.state.loadingFiles && !this.state.children && <h6>You have no files!</h6> }
-                                { !this.state.loadingFiles && this.state.children &&
-                                    this.state.children.map(data => <Entry data={data} onClick={this.downDirectory(data.name)} refresh={this.refreshFilesList.bind(this)}
-                                                                           currentDirectory={this.state.currentDirectory} key={data.name}/>)}
+                    <div className="card-body" style={{ overflow: "auto", paddingTop: "0px" }}>
+                        { this.state.loadingFiles && (
+                            <div className="spinner-border" role="status">
+                                <span className="sr-only">Loading...</span>
                             </div>
-                        </div>
+                        )}
+                        { !this.state.loadingFiles && !this.state.children && <h6>You have no files!</h6> }
+                        { !this.state.loadingFiles && this.state.children &&
+                        this.state.children.map(data => <Entry data={data} onClick={this.downDirectory(data.name)} refresh={this.refreshFilesList.bind(this)}
+                                                               currentDirectory={this.state.currentDirectory} key={data.name}/>)}
                     </div>
                 </div>
             </div>
