@@ -42,8 +42,10 @@ class Files extends Component {
     refreshFilesList() {
         this.setState({ loadingFiles: true });
         FilesApi.read(this.state.currentDirectory)
-            .then(files => this.setState({ children: files.data.children }))
-            .catch(err => console.error(err))
+            .then(data => {
+                if (data.status !== 200) toast.error(`Failed to load files: (${data.status}) ${data.reason}`);
+                else this.setState({ children: data.data.children })
+            })
             .finally(() => this.setState({ loadingFiles: false }));
     }
 

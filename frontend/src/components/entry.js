@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileDownload, faFolder, faFileAlt, faEllipsisV, faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import ReactModal from 'react-modal';
+import { toast } from 'react-toastify';
 import { Files, Shares } from '../api';
 
 export default class Entry extends Component {
@@ -29,10 +30,14 @@ export default class Entry extends Component {
     onUserChange = e => this.setState({ shareTo: e.target.value });
 
     download = () => Files.read(`${this.props.currentDirectory}/${this.props.data.name}`, true)
-        .catch(err => console.error(err));
+        .then(data => {
+            if (data.status !== 200) toast.error(`Failed to download file: (${data.status}) ${data.reason}`);
+        });
     remove = () => Files.delete(`${this.props.currentDirectory}/${this.props.data.name}`)
-        .then(() => this.props.refresh())
-        .catch(err => console.error(err));
+        .then(data => {
+            if (data.status !== 200) toast.error(`Failed to delete file: (${data.status}) ${data.reason}`);
+            else this.props.refresh();
+        })
 
     move = () => {
         // Ensure path formatted correctly
@@ -40,21 +45,27 @@ export default class Entry extends Component {
         else this.setState({ loading: true });
 
         Files.update(`${this.props.currentDirectory}/${this.props.data.name}`, "", this.state.newPath)
-            .then(() => this.props.refresh())
-            .catch(err => console.error(err))
+            .then(data => {
+                if (data.status !== 200) toast.error(`Failed to move file/directory: (${data.status}) ${data.reason}`);
+                else this.props.refresh();
+            })
             .finally(() => this.setState({ loading: false, renameModalOpen: false }));
     }
     rename = () => {
         this.setState({ loading: true });
         Files.update(`${this.props.currentDirectory}/${this.props.data.name}`, this.state.newName, "")
-            .then(() => this.props.refresh())
-            .catch(err => console.error(err))
+            .then(data => {
+                if (data.status !== 200) toast.error(`Failed to rename file/directory: (${data.status}) ${data.reason}`);
+                else this.props.refresh()
+            })
             .finally(() => this.setState({ loading: false, moveModalOpen: false }));
     }
     share = () => {
         this.setState({ loading: true });
         Shares.create(`${this.props.currentDirectory}/${this.props.data.name}`, this.state.shareTo)
-            .catch(err => console.error(err))
+            .then(data => {
+                if (data.status !== 200) toast.error(`Failed to share file: (${data.status}) ${data.reason}`);
+            })
             .finally(() => this.setState({ loading: false, shareModalOpen: false }));
     }
 
