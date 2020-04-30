@@ -94,7 +94,8 @@ class FileManager extends Component {
                                 )}
                                 { !this.state.loadingFiles && !this.state.children && <h6>You have no files!</h6> }
                                 { !this.state.loadingFiles && this.state.children &&
-                                    this.state.children.map(data => <Entry data={data} onClick={this.downDirectory(data.name)} key={Math.random().toString()}/>)}
+                                    this.state.children.map(data => <Entry data={data} onClick={this.downDirectory(data.name)} refresh={this.refreshFilesList.bind(this)}
+                                                                           currentDirectory={this.state.currentDirectory} key={data.name}/>)}
                             </div>
                         </div>
                     </div>
