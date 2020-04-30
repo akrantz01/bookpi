@@ -12,14 +12,21 @@ export default class Entry extends Component {
         this.state = {
             newName: "",
             newPath: "",
+            shareTo: "",
             renameModalOpen: false,
             moveModalOpen: false,
+            shareModalOpen: false,
             loading: false,
         }
     }
 
     toggleRenameModal = () => this.setState({ renameModalOpen: !this.state.renameModalOpen });
     toggleMoveModal = () => this.setState({ moveModalOpen: !this.state.moveModalOpen });
+    toggleShareModal = () => this.setState({ shareModalOpen: !this.state.shareModalOpen });
+
+    onNameChange = e => this.setState({ newName: e.target.value });
+    onPathChange = e => this.setState({ newPath: e.target.value });
+    onUserChange = e => this.setState({ shareTo: e.target.value });
 
     download = () => Files.read(`${this.props.currentDirectory}/${this.props.data.name}`, true)
         .catch(err => console.error(err));
@@ -44,9 +51,12 @@ export default class Entry extends Component {
             .catch(err => console.error(err))
             .finally(() => this.setState({ loading: false, moveModalOpen: false }));
     }
-
-    onNameChange = e => this.setState({ newName: e.target.value });
-    onPathChange = e => this.setState({ newPath: e.target.value });
+    share = () => {
+        this.setState({ loading: true });
+        Shares.create(`${this.props.currentDirectory}/${this.props.data.name}`, this.state.shareTo)
+            .catch(err => console.error(err))
+            .finally(() => this.setState({ loading: false }));
+    }
 
     render() {
         let { data, onClick, currentDirectory } = this.props;
@@ -65,7 +75,7 @@ export default class Entry extends Component {
                                             <button type="button" className="btn btn-outline-success btn-sm" style={{ fontSize: "0.75rem", marginRight: "0.25rem" }}
                                                     title="Download" onClick={this.download}><FontAwesomeIcon icon={faFileDownload}/></button>
                                             <button type="button" className="btn btn-outline-primary btn-sm" style={{ fontSize: "0.75rem", marginRight: "0.25rem" }}
-                                                    title="Share"><FontAwesomeIcon icon={faShareAlt}/></button>
+                                                    title="Share" onClick={this.toggleShareModal.bind(this)}><FontAwesomeIcon icon={faShareAlt}/></button>
                                         </>
                                     )}
                                     <div className="btn-group">
@@ -112,7 +122,7 @@ export default class Entry extends Component {
                                 { !this.state.loading && (
                                     <>
                                         <button type="button" className="btn btn-outline-danger" style={{ marginRight: "0.5rem"}} onClick={this.toggleRenameModal.bind(this)}>Cancel</button>
-                                        <button type="button" className="btn btn-primary" onClick={this.rename.bind(this)}>Confirm</button>
+                                        <button type="button" className="btn btn-primary" onClick={this.rename.bind(this)}>Rename</button>
                                     </>
                                 )}
                             </div>
@@ -150,7 +160,43 @@ export default class Entry extends Component {
                                 { !this.state.loading && (
                                     <>
                                         <button type="button" className="btn btn-outline-danger" style={{ marginRight: "0.5rem"}} onClick={this.toggleMoveModal.bind(this)}>Cancel</button>
-                                        <button type="button" className="btn btn-primary" onClick={this.move.bind(this)}>Confirm</button>
+                                        <button type="button" className="btn btn-primary" onClick={this.move.bind(this)}>Move</button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </ReactModal>
+                <ReactModal isOpen={this.state.shareModalOpen} contentLabel="Share Modal">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-sm text-center">
+                                <h5>Share <code>{data.name}</code></h5>
+                            </div>
+                        </div>
+                        <hr/>
+                        <br/>
+                        <div className="row">
+                            <div className="input-group">
+                                <div className="input-group-prepend">
+                                    <span className="input-group-text">Share to</span>
+                                </div>
+                                <input type="text" aria-label="Share to" className="form-control" value={this.state.shareTo} onChange={this.onUserChange.bind(this)}/>
+                            </div>
+                        </div>
+                        <br/>
+                        <hr/>
+                        <div className="row">
+                            <div className="col-sm text-right">
+                                { this.state.loading && (
+                                    <div className="spinner-border" role="status">
+                                        <span className="sr-only">Loading...</span>
+                                    </div>
+                                )}
+                                { !this.state.loading && (
+                                    <>
+                                        <button type="button" className="btn btn-outline-danger" style={{ marginRight: "0.5rem"}} onClick={this.toggleShareModal.bind(this)}>Cancel</button>
+                                        <button type="button" className="btn btn-primary" onClick={this.share.bind(this)}>Share</button>
                                     </>
                                 )}
                             </div>

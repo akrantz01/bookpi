@@ -67,13 +67,12 @@ class FileManager extends Component {
                         <div className="card" style={{ height: "85vh" }}>
                             <div className="card-body">
                                 <h3 className="card-title">Files</h3>
-                                <button type="button" className="btn btn-sm btn-outline-primary">Refresh</button>
+                                <button type="button" className="btn btn-sm btn-outline-primary" onClick={this.refreshFilesList.bind(this)}>Refresh</button>
                                 <div className="btn-group" role="group" aria-label="File options">
                                     <button type="button" className="btn btn-sm btn-outline-success">Upload</button>
                                     <button type="button" className="btn btn-sm btn-outline-info">New Folder</button>
                                 </div>
                                 <hr className="my-4"/>
-                                <br/>
                                 <div className="list-group list-group-flush">
                                     <button type="button" className="list-group-item list-group-item-action">My Files</button>
                                     <button type="button" className="list-group-item list-group-item-action">Shared Files</button>
