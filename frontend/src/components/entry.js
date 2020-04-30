@@ -55,7 +55,7 @@ export default class Entry extends Component {
         this.setState({ loading: true });
         Shares.create(`${this.props.currentDirectory}/${this.props.data.name}`, this.state.shareTo)
             .catch(err => console.error(err))
-            .finally(() => this.setState({ loading: false }));
+            .finally(() => this.setState({ loading: false, shareModalOpen: false }));
     }
 
     render() {
