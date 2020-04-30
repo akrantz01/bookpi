@@ -41,7 +41,10 @@ class FileManager extends Component {
 
     refreshFilesList() {
         this.setState({ loadingFiles: true });
-        Files.read(this.state.currentDirectory).then(files => this.setState({ loadingFiles: false, children: files.data.children }));
+        Files.read(this.state.currentDirectory)
+            .then(files => this.setState({ children: files.data.children }))
+            .catch(err => console.error(err))
+            .finally(() => this.setState({ loadingFiles: false }));
     }
 
     generateBreadcrumbs() {
