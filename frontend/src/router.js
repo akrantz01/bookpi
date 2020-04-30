@@ -12,7 +12,7 @@ import SignIn from './pages/sign-in';
 import SignUp from "./pages/sign-up";
 import NotFound from "./pages/not-found";
 import Chat from "./pages/chat";
-import FileManager from "./pages/files";
+import Files from "./pages/files";
 import Account from "./pages/account";
 
 class Router extends Component {
@@ -64,7 +64,7 @@ class Router extends Component {
                         <Route path="/sign-in" exact><SignIn login={this.login.bind(this)} loggedIn={this.state.loggedIn} /></Route>
                         <Route path="/sign-up" exact><SignUp loggedIn={this.state.loggedIn} /></Route>
                         <Route path="/chat" exact><Chat loggedIn={this.state.loggedIn} username={this.state.user.username} /></Route>
-                        <Route path="/files" exact><FileManager loggedIn={this.state.loggedIn} username={this.state.username} /></Route>
+                        <Route path="/files" exact><Files loggedIn={this.state.loggedIn} username={this.state.username} /></Route>
                         <Route path="/account" exact><Account loggedIn={this.state.loggedIn} user={this.state.user} updateName={this.updateUser.bind(this)} /></Route>
                         <Route path="*"><NotFound/></Route>
                     </Switch>

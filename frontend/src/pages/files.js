@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Files } from '../api';
+import { Files as FilesApi } from '../api';
 import Entry from "../components/entry";
 
 const style = {
@@ -14,7 +14,7 @@ const style = {
     }
 };
 
-class FileManager extends Component {
+class Files extends Component {
     constructor(props) {
         super(props);
 
@@ -41,7 +41,7 @@ class FileManager extends Component {
 
     refreshFilesList() {
         this.setState({ loadingFiles: true });
-        Files.read(this.state.currentDirectory)
+        FilesApi.read(this.state.currentDirectory)
             .then(files => this.setState({ children: files.data.children }))
             .catch(err => console.error(err))
             .finally(() => this.setState({ loadingFiles: false }));
@@ -101,10 +101,9 @@ class FileManager extends Component {
     }
 }
 
-FileManager.propTypes = {
+Files.propTypes = {
     loggedIn: PropTypes.bool,
     history: PropTypes.object,
-    username: PropTypes.string,
 };
 
-export default withRouter(FileManager);
+export default withRouter(Files);
