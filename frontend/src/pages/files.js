@@ -19,34 +19,34 @@ class Files extends Component {
         super(props);
 
         this.state = {
-            loadingFiles: true,
+            loading: true,
             currentDirectory: "",
             children: []
         }
     }
 
     componentDidMount() {
-        this.refreshFilesList();
+        this.refresh();
     }
 
     upDirectory = idx => () => {
         this.setState({ currentDirectory: this.state.currentDirectory.split("/").slice(0, idx+1).join("/") });
-        setTimeout(() => this.refreshFilesList(), 50);
+        setTimeout(() => this.refresh(), 50);
     }
 
     downDirectory = newDir => () => {
         this.setState({ currentDirectory: `${this.state.currentDirectory}/${newDir}` });
-        setTimeout(() => this.refreshFilesList(), 50);
+        setTimeout(() => this.refresh(), 50);
     }
 
-    refreshFilesList() {
-        this.setState({ loadingFiles: true });
+    refresh() {
+        this.setState({ loading: true });
         FilesApi.read(this.state.currentDirectory)
             .then(data => {
                 if (data.status !== 200) toast.error(`Failed to load files: (${data.status}) ${data.reason}`);
                 else this.setState({ children: data.data.children })
             })
-            .finally(() => this.setState({ loadingFiles: false }));
+            .finally(() => this.setState({ loading: false }));
     }
 
     generateBreadcrumbs() {
@@ -75,7 +75,7 @@ class Files extends Component {
                             </div>
                             <div className="col-sm text-right">
                                 <div className="btn-group" role="group" aria-label="File operations">
-                                    <button type="button" className="btn btn-outline-primary" onClick={this.refreshFilesList.bind(this)}>Refresh</button>
+                                    <button type="button" className="btn btn-outline-primary" onClick={this.refresh.bind(this)}>Refresh</button>
                                     <button type="button" className="btn btn-outline-success">Upload</button>
                                     <button type="button" className="btn btn-outline-info">New Folder</button>
                                 </div>
@@ -87,14 +87,14 @@ class Files extends Component {
                         </nav>
                     </div>
                     <div className="card-body" style={{ overflow: "auto", paddingTop: "0px" }}>
-                        { this.state.loadingFiles && (
+                        { this.state.loading && (
                             <div className="spinner-border" role="status">
                                 <span className="sr-only">Loading...</span>
                             </div>
                         )}
-                        { !this.state.loadingFiles && !this.state.children && <h6>You have no files!</h6> }
-                        { !this.state.loadingFiles && this.state.children &&
-                        this.state.children.map(data => <Entry data={data} onClick={this.downDirectory(data.name)} refresh={this.refreshFilesList.bind(this)}
+                        { !this.state.loading && !this.state.children && <h6>You have no files!</h6> }
+                        { !this.state.loading && this.state.children &&
+                        this.state.children.map(data => <Entry data={data} onClick={this.downDirectory(data.name)} refresh={this.refresh.bind(this)}
                                                                currentDirectory={this.state.currentDirectory} key={data.name}/>)}
                     </div>
                 </div>
