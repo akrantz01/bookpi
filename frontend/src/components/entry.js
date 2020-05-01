@@ -31,11 +31,11 @@ export default class Entry extends Component {
 
     download = () => Files.read(`${this.props.currentDirectory}/${this.props.data.name}`, true)
         .then(data => {
-            if (data.status !== 200) toast.error(`Failed to download file: (${data.status}) ${data.reason}`);
+            if (data.status !== 200 && data.status !== 401) toast.error(`Failed to download file: (${data.status}) ${data.reason}`);
         });
     remove = () => Files.delete(`${this.props.currentDirectory}/${this.props.data.name}`)
         .then(data => {
-            if (data.status !== 200) toast.error(`Failed to delete file: (${data.status}) ${data.reason}`);
+            if (data.status !== 200 && data.status !== 401) toast.error(`Failed to delete file: (${data.status}) ${data.reason}`);
             else this.props.refresh();
         })
 
@@ -46,7 +46,7 @@ export default class Entry extends Component {
 
         Files.update(`${this.props.currentDirectory}/${this.props.data.name}`, "", this.state.newPath)
             .then(data => {
-                if (data.status !== 200) toast.error(`Failed to move file/directory: (${data.status}) ${data.reason}`);
+                if (data.status !== 200 && data.status !== 401) toast.error(`Failed to move file/directory: (${data.status}) ${data.reason}`);
                 else this.props.refresh();
             })
             .finally(() => this.setState({ loading: false, renameModalOpen: false }));
@@ -55,7 +55,7 @@ export default class Entry extends Component {
         this.setState({ loading: true });
         Files.update(`${this.props.currentDirectory}/${this.props.data.name}`, this.state.newName, "")
             .then(data => {
-                if (data.status !== 200) toast.error(`Failed to rename file/directory: (${data.status}) ${data.reason}`);
+                if (data.status !== 200 && data.status !== 401) toast.error(`Failed to rename file/directory: (${data.status}) ${data.reason}`);
                 else this.props.refresh()
             })
             .finally(() => this.setState({ loading: false, moveModalOpen: false }));
@@ -64,7 +64,7 @@ export default class Entry extends Component {
         this.setState({ loading: true });
         Shares.create(`${this.props.currentDirectory}/${this.props.data.name}`, this.state.shareTo)
             .then(data => {
-                if (data.status !== 200) toast.error(`Failed to share file: (${data.status}) ${data.reason}`);
+                if (data.status !== 200 && data.status !== 401) toast.error(`Failed to share file: (${data.status}) ${data.reason}`);
             })
             .finally(() => this.setState({ loading: false, shareModalOpen: false }));
     }

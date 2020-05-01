@@ -8,7 +8,7 @@ class Header extends Component {
     signOut() {
         Authentication.logout().then(data => {
             if (data.status === 200) this.props.logout();
-            else toast(data.reason);
+            else if (data.status !== 401) toast.error(`Failed to logout: (${data.status}) ${data.reason}`);
         })
     }
 

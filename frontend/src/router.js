@@ -29,12 +29,10 @@ class Router extends Component {
 
     componentDidMount() {
         Users.readSelf().then(data => {
-            if (data.status === 200) this.setState({ loggedIn: true, user: data.data, loading: false });
-            else if (data.status === 500) {
-                toast.error(data.reason);
-            }
-            else this.setState({ loading: false });
-        });
+            if (data.status === 200) this.setState({ loggedIn: true, user: data.data });
+            else if (data.status !== 401) toast.error(`Failed to read user data: (${data.status}) ${data.reason}`);
+        })
+            .finally(() => this.setState({ loading: false }));
     }
 
     updateUser = name => this.setState({ user: {...this.state.user, name } });
@@ -43,7 +41,7 @@ class Router extends Component {
         this.setState({ loggedIn: true, loading: true });
         Users.readSelf().then(data => {
             if (data.status === 200) this.setState({ user: data.data, loading: false });
-            else toast.error(data.reason);
+            else if (data.status !== 401) toast.error(`Failed to read user data: (${data.status}) ${data.reason}`);
         });
     }
     logout = () => this.setState({ loggedIn: false, user: {} });

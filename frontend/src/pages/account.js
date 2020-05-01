@@ -15,6 +15,10 @@ class Account extends Component {
         }
     }
 
+    componentDidMount() {
+        if (!this.props.loggedIn) this.props.history.push("/sign-in");
+    }
+
     onNameInput = event => this.setState({ name: event.target.value });
     onPasswordInput = event => this.setState({ password: event.target.value });
     onConfirmPasswordInput = event => this.setState({ confirmPassword: event.target.value });
@@ -40,13 +44,11 @@ class Account extends Component {
                 if (this.state.name !== "") this.props.updateName(this.state.name);
                 this.setState({ name: "", password: "", confirmPassword: "" });
             }
-            else toast.error(data.reason);
+            else if (data.status !== 401) toast.error(`Failed to update user: (${data.status}) ${data.reason}`);
         })
     };
 
     render() {
-        if (!this.props.loggedIn) this.props.history.push("/sign-in");
-
         return (
             <div className="container">
                 <div className="card">

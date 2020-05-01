@@ -26,6 +26,7 @@ class Files extends Component {
     }
 
     componentDidMount() {
+        if (!this.props.loggedIn) return this.props.history.push("/sign-in");
         this.refresh();
     }
 
@@ -43,7 +44,7 @@ class Files extends Component {
         this.setState({ loading: true });
         FilesApi.read(this.state.currentDirectory)
             .then(data => {
-                if (data.status !== 200) toast.error(`Failed to load files: (${data.status}) ${data.reason}`);
+                if (data.status !== 200 && data.status !== 401) toast.error(`Failed to load files: (${data.status}) ${data.reason}`);
                 else this.setState({ children: data.data.children })
             })
             .finally(() => this.setState({ loading: false }));
@@ -63,8 +64,6 @@ class Files extends Component {
     }
 
     render() {
-        if (!this.props.loggedIn) this.props.history.push("/sign-in");
-
         return (
             <div className="container">
                 <div className="card" style={{ height: "85vh" }}>

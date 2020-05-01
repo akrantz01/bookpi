@@ -7,7 +7,10 @@ import { Chats, Messages } from '../api';
 async function getChats() {
     // Get list of user chats
     let chatList = await Chats.list();
-    if (chatList.status !== 200) toast.error(`Failed loading chat list: (${chatList.status}) ${chatList.reason}`);
+    if (chatList.status !== 200) {
+        if (chatList.reason !== "No session present") toast.error(`Failed loading chat list: (${chatList.status}) ${chatList.reason}`);
+        return [];
+    }
 
     let chatData = [];
 
@@ -15,7 +18,10 @@ async function getChats() {
     for (let id of chatList.data) {
         // Describe chat
         let chat = await Chats.read(id);
-        if (chat.status !== 200) toast.error(`Failed to load chat data for ${id}: (${chat.status}) ${chat.reason}`);
+        if (chat.status !== 200) {
+            if (chatList.reason !== "No session present") toast.error(`Failed loading chat list: (${chat.status}) ${chat.reason}`);
+            return [];
+        }
 
         // Add id to chat
         chat.data.id = id;
@@ -43,13 +49,14 @@ class Chat extends Component {
     }
 
     componentDidMount() {
+        if (!this.props.loggedIn) return this.props.history.push("/sign-in");
         getChats().then(chats => this.setState({ chats, loadingList: false }));
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.selected.id !== this.state.selected.id) {
             Messages.list(this.state.selected.id).then(data => {
-                if (data.status !== 200) toast.error(`Failed to load messages for ${this.state.selected.id}: (${data.status}) ${data.reason}`);
+                if (data.status !== 200 && data.status !== 401) toast.error(`Failed to load messages for ${this.state.selected.id}: (${data.status}) ${data.reason}`);
                 else this.setState({ selected: { ...this.state.selected, messages: data.data }, loadingChat: false });
             });
         }
@@ -62,19 +69,19 @@ class Chat extends Component {
     selectChat = event => (this.state.selected.id !== event.target.dataset.id && event.target.dataset.user1 && event.target.dataset.user2) ? this.setState( { selected: Object.assign({}, event.target.dataset), loadingChat: true }) : false;
     createChat = () => Chats.create(this.state.to, this.state.initialMessage).then(data => {
         if (data.status === 400 && data.reason === "Specified recipient does not exist") toast.error("Specified user does not exist");
-        else if (data.status !== 200) toast.error(`Failed to create new chat: (${data.status}) ${data.reason}`);
+        else if (data.status !== 200 && data.reason !== "No session present") toast.error(`Failed to create new chat: (${data.status}) ${data.reason}`);
         else {
             this.setState({ to: "", initialMessage: "" });
             this.refreshChats();
         }
     });
     deleteChat = event => Chats.delete(event.target.dataset.id).then(data => {
-        if (data.status !== 200) toast.error(`Failed to delete chat ${event.target.dataset.id}: (${data.status}) ${data.reason}`);
+        if (data.status !== 200 && data.status !== 401) toast.error(`Failed to delete chat ${event.target.dataset.id}: (${data.status}) ${data.reason}`);
         else this.refreshChats();
     });
 
     sendMessage = () => Messages.create(this.state.selected.id, this.state.message).then(data => {
-        if (data.status !== 200) toast.error(`Failed to send message to ${this.state.selected.id}: (${data.status}) ${data.reason}`);
+        if (data.status !== 200 && data.status !== 401) toast.error(`Failed to send message to ${this.state.selected.id}: (${data.status}) ${data.reason}`);
         else this.setState({ selected: { ...this.state.selected, messages: [...this.state.selected.messages, `${this.props.username}:${this.state.message}`] }, message: "" });
     });
 
@@ -83,8 +90,6 @@ class Chat extends Component {
     onToInput = event => this.setState({ to: event.target.value });
 
     render() {
-        if (!this.props.loggedIn) this.props.history.push("/sign-in");
-
         return (
             <div className="container">
                 <div className="modal fade" id="createModal" tabIndex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">

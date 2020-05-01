@@ -17,6 +17,7 @@ class Shared extends Component {
     }
 
     componentDidMount() {
+        if (!this.props.loggedIn) this.props.history.push("/sign-in");
         this.refresh();
     }
 
@@ -24,7 +25,7 @@ class Shared extends Component {
         this.setState({ loading: true });
         Shares.list()
             .then(data => {
-                if (data.status !== 200) toast.error(`Failed to load shared files: (${data.status}) ${data.reason}`);
+                if (data.status !== 200 && data.status !== 401) toast.error(`Failed to load shared files: (${data.status}) ${data.reason}`);
                 else {
                     let shares = {};
                     for (let share of data.data) {
@@ -40,12 +41,10 @@ class Shared extends Component {
 
     download = (user, file) => () => Shares.download(user, file)
         .then(data => {
-            if (data.status !== 200) toast.error(`Failed to download file: (${data.status}) ${data.reason}`);
+            if (data.status !== 200 && data.status !== 401) toast.error(`Failed to download file: (${data.status}) ${data.reason}`);
         });
 
     render() {
-        if (!this.props.loggedIn) this.props.history.push("/sign-in");
-
         return (
             <div className="container">
                 <div className="card" style={{ height: "85vh" }}>
