@@ -19,7 +19,7 @@ async function downloadFile(path, response) {
     // Decode payload if json to ensure not error
     if (response.status !== 200) {
         let parsed = JSON.parse(await response.data.text());
-        if (parsed.status === "error") return parsed.reason;
+        if (parsed.status === "error") return { status: response.status, reason: parsed.reason };
     }
 
     // Split to get file name

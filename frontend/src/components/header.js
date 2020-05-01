@@ -36,7 +36,10 @@ class Header extends Component {
                                         <Link className="nav-link" to="/chat">{ (location.pathname === "/chat") ? <b>Chat</b> : "Chat" }</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link" to="/files">{ (location.pathname === "/files") ? <b>Files</b> : "Files" }</Link>
+                                        <Link className="nav-link" to="/my-files">{ (location.pathname === "/my-files") ? <b>My Files</b> : "My Files" }</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/shared-with-me">{ (location.pathname === "/shared-with-me") ? <b>Shared with Me</b> : "Shared with Me" }</Link>
                                     </li>
                                     <li className="nav-item">
                                         <Link className="nav-link" to="/account">{ (location.pathname === "/account") ? <b>Account</b> : "Account" }</Link>
