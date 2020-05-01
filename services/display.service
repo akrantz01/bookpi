@@ -1,0 +1,14 @@
+[Unit]
+Description=Status display daemon
+Wants=basic.target
+After=basic.target network.target
+
+[Service]
+SyslogIdentifier=display
+StandardOutput=syslog
+StandardError=syslog
+ExecStart=/usr/local/bin/bookpi-display
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

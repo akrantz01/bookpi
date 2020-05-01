@@ -3,6 +3,7 @@ module github.com/akrantz01/bookpi/server
 go 1.13
 
 require (
+	aletheia.icu/broccoli/fs v0.0.0-20200420200651-c5ac961a357a
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.3
 	github.com/joho/godotenv v1.3.0

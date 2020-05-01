@@ -1,3 +1,5 @@
+//go:generate broccoli -src build -o frontend -gitignore
+
 package main
 
 import (
@@ -80,7 +82,10 @@ func main() {
 	routes.Shares(cfg.FilesDirectory, db, api)
 
 	// Register session middleware
-	router.Use(sessionMiddleware(db))
+	api.Use(sessionMiddleware(db))
+
+	// Serve embedded files
+	router.PathPrefix("/").Handler(br.Serve("/build"))
 
 	// Setup server
 	server := http.Server{

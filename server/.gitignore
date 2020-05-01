@@ -1,4 +1,7 @@
 /.idea
 /files
+/build
 .env
 database.db
+frontend.gen.go
+server
