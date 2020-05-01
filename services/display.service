@@ -1,14 +1,29 @@
 [Unit]
 Description=Status display daemon
 Wants=basic.target
-After=basic.target network.target
+After=basic.target
+After=network.target
+After=syslog.target
 
 [Service]
+Type=simple
+
+# Run configuration
+User=bookpi
+Group=bookpi
+WorkingDirectory=/opt/bookpi
+
+# Logging configuration
 SyslogIdentifier=display
 StandardOutput=syslog
 StandardError=syslog
+
+# Start directive
 ExecStart=/usr/local/bin/bookpi-display
+
+# Restart configuration
 Restart=always
+RestartSec=2s
 
 [Install]
 WantedBy=multi-user.target

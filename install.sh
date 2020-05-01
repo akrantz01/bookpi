@@ -6,6 +6,18 @@ trap "echo 'Failed to install BookPi. Please add an issue to https://github.com/
 echo "Installing BookPi to the system..."
 echo "NOTICE: sudo is used to copy files to your PATH and to add systemd unit files. When prompted, please enter your password."
 
+# Create user
+adduser --system --shell /bin/bash --gecos 'BookPi' --group --disabled-password --home /opt/bookpi bookpi
+
+# Create environment file
+cat << EOF > /opt/bookpi/environment
+HOST=0.0.0.0
+PORT=80
+DATABASE=/opt/bookpi/database.db
+FILES_DIR=/opt/bookpi/files
+RESET=no
+EOF
+
 # Move binaries to /usr/local/bin
 sudo mv bookpi-*-server /usr/local/bin
 sudo mv bookpi-*-display /usr/local/bin
