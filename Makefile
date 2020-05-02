@@ -26,7 +26,7 @@ help:
 
 .PHONY: zip
 zip: deps build
-	zip bookpi releases/* services/* install.sh
+	zip bookpi releases/* services/* install.sh bookpi.sh
 
 # Dependencies
 .PHONY: deps
