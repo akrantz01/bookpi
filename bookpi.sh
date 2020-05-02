@@ -13,6 +13,10 @@ Usage: $0 [OPTIONS]
 
   -h|--help       Display this message
   -p|--password   Change the wireless password
+  -s|--ssid       Change the broadcasted name
+  --start         Start all the services
+  --stop          Stop all the services
+  --restart       Restart all the services
 EOH
   echo "$display"
 }
@@ -27,16 +31,20 @@ change_wifi_ssid() {
   systemctl restart hostapd
 }
 
-start_services() {
+stop_services() {
   systemctl stop bookpi-display
   systemctl stop bookpi-server
   systemctl stop hostapd
+  systemctl stop dnsmasq
+  systemctl stop dhcpcd
 }
 
-stop_services() {
+start_services() {
   systemctl start bookpi-display
   systemctl start bookpi-server
   systemctl start hostapd
+  systemctl start dnsmasq
+  systemctl start dhcpcd
 }
 
 restart_services() {
