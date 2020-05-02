@@ -92,7 +92,6 @@ systemctl restart hostapd.service
 
 # Configure DNS server
 echo "Configuring DNS server..."
-mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
 cat << EOF > /etc/dnsmasq.conf
 interface=wlan0
 dhcp-range=10.5.1.5,10.5.1.128,255.255.255.0,24h
@@ -104,14 +103,15 @@ bogus-priv
 expand-hosts
 domain=pi
 EOF
-systemctl restart dnsmasq.service
 printf "10.5.1.1\tbook" >> /etc/hosts
+systemctl restart dnsmasq.service
 
 # Done, reboot
 echo "Successfully configured BookPi"
 echo "    - A wireless network named 'BookPi' has been created"
 echo "    - The password for the network is '${apPassword}'"
-echo "Please restart to finish setup"
-echo "Automatically restarting in 10 seconds..."
+echo "    - It is recommended that you change your password"
+echo "Automatically restarting to complete setup in 10 seconds..."
+echo "Press Ctrl+c to cancel"
 sleep 10
 reboot
