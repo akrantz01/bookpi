@@ -3,4 +3,5 @@
 **/.env
 **/.vscode
 releases
-bookpi.zip
+bookpi.tar.gz
+bookpi

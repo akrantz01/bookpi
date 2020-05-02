@@ -9,7 +9,7 @@ help:
 	@echo "List of commands:"
 	@echo
 	@echo "  make help	      - display this message"
-	@echo "  make zip         - create a zip of all necessary files"
+	@echo "  make dist        - create a tarball of all necessary files"
 	@echo "  make deps	      - get dependencies for all projects"
 	@echo "  make deps-go     - add dependencies for the server"
 	@echo "  make deps-js     - add dependencies for the frontend"
@@ -24,9 +24,14 @@ help:
 	@echo "  make clean-js    - remove generated js files"
 	@echo "  make clean-py    - remove generated py files"
 
-.PHONY: zip
-zip: deps build
-	zip bookpi releases/* services/* install.sh bookpi.sh
+.PHONY: dist
+dist: clean-dist deps build
+	mkdir -p bookpi
+	cp releases/* bookpi/
+	cp services/* bookpi/
+	cp install.sh bookpi/
+	cp bookpi.sh bookpi/
+	tar caf bookpi.tar.gz bookpi/*
 
 # Dependencies
 .PHONY: deps
@@ -73,7 +78,8 @@ clean: clean-go clean-js clean-py clean-dist
 .PHONY: clean-dist
 clean-dist:
 	rm -rf releases
-	rm -rf bookpi.zip
+	rm -rf bookpi
+	rm -rf bookpi.tar.gz
 
 .PHONY: clean-go
 clean-go:
