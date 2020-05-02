@@ -35,8 +35,10 @@ RESET=no
 EOF
 
 # Move binaries to /usr/local/bin
-mv bookpi-*-server /usr/local/bin
-mv bookpi-*-display /usr/local/bin
+mv bookpi-*-server /usr/local/bin/bookpi-server
+mv bookpi-*-display /usr/local/bin/bookpi-display
+mv bookpi.sh /usr/local/bin/bookpi
+chmod +x /usr/local/bin/bookpi /usr/local/bin/bookpi-server /usr/local/bin/bookpi-display
 
 # Install systemd units
 echo "Installing services as systemd units..."
