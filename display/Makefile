@@ -3,7 +3,7 @@ PYINSTALLER := pyinstaller
 
 .PHONY: deps
 deps:
-	$(PIP) install adafruit-circuitpython-ssd1306 pyinstaller ifaddr
+	$(PIP) install -r requirements.txt
 
 .PHONY: build
 build: deps
