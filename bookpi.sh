@@ -8,13 +8,13 @@ fi
 
 
 display_help() {
-	read -r -d '' display << EOH
+  read -r -d '' display << EOH
 Usage: $0 [OPTIONS]
 
-  -h|--help		Display this message
-  -p|--password		Change the wireless password
+  -h|--help       Display this message
+  -p|--password   Change the wireless password
 EOH
-	echo "$display"
+  echo "$display"
 }
 
 change_wifi_password() {
@@ -56,10 +56,10 @@ fi
 while [[ $# -gt 0 ]]
 do
 case "$1" in
-	-p|--password)
-	change_wifi_password "$2"
-	shift
-	shift
+  -p|--password)
+  change_wifi_password "$2"
+  shift
+  shift
 	;;
   -s|--ssid)
   change_wifi_ssid "$2"
@@ -78,16 +78,14 @@ case "$1" in
   restart_services
   shift
   ;;
-	-h|--help)
-	display_help
-	exit 0
-	;;
-	*)
-	echo "Unknown option: $1"
-	display_help
-	exit 1
-	;;
+  -h|--help)
+  display_help
+  exit 0
+  ;;
+  *)
+  echo "Unknown option: $1"
+  display_help
+  exit 1
+  ;;
 esac
 done
-
-echo "$AP_PASSWORD"
