@@ -34,6 +34,10 @@ FILES_DIR=/opt/bookpi/files
 RESET=no
 EOF
 
+# Install Pillow dependencies
+echo "Installing dependencies for Pillow..."
+apt-get install -y libtiff5 libopenjp2-7
+
 # Move binaries to /usr/local/bin
 mv bookpi-*-server /usr/local/bin/bookpi-server
 mv bookpi-*-display /usr/local/bin/bookpi-display
