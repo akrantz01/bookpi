@@ -22,10 +22,6 @@ StandardError=syslog
 # Start directive
 ExecStart=/usr/local/bin/bookpi-server
 
-# Allow binding to ports below 1024
-CapabilityBoundingSet=CAP_NET_BIND_SERVICE
-AmbientCapabilities=CAP_NET_BIND_SERIVCE
-
 # Restart configuration
 Restart=always
 RestartSec=2s
