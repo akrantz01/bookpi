@@ -21,6 +21,7 @@ dist: build
 	cp services/* bookpi/
 	cp install.sh bookpi/
 	cp bookpi.sh bookpi/
+	chmod +x bookpi/bookpi.sh bookpi/install.sh
 	tar caf bookpi.tar.gz bookpi/*
 
 .PHONY: build
