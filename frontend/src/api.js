@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Set constants
-axios.defaults.baseURL = `${window.location.protocol}//${window.location.host}${ (window.location.port === "") ? "" : ":" + window.location.port }/api`;
+axios.defaults.baseURL = `${window.location.protocol}//${window.location.host}/api`;
 axios.defaults.withCredentials = true;
 
 // Send a request and handle errors gracefully
