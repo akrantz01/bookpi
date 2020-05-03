@@ -13,13 +13,18 @@ clean:
 	rm -rf frontend.gen.go
 
 .PHONY: deps
-deps:
+deps: generate
 	$(GOGET)
 
+.PHONY: deps-broccoli
+deps-broccoli:
+	$(GOGET) -u aletheia.icu/broccoli
+
 .PHONY: generate
-generate: deps
+generate: deps-broccoli
+	test -d build || ( echo "Frontend must be built first"; exit 1 )
 	$(GOGENERATE) .
 
 .PHONY: build
-build: generate
+build: deps
 	GOOS=linux GOARCH=arm GOARM=6 $(GOBUILD)
