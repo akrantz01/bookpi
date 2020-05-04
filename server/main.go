@@ -89,6 +89,9 @@ func main() {
 	fs := &assets.HTTPFS{ Prefix: "/build" }
 	router.PathPrefix("/").Handler(http.FileServer(fs))
 
+	// Register not found handler
+	router.NotFoundHandler = notFoundHandler()
+
 	// Setup server
 	server := http.Server{
 		Addr:         cfg.Host + ":" + cfg.Port,
