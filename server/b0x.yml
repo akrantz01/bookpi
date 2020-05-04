@@ -14,5 +14,15 @@ spread: true
 lcf: false
 
 custom:
-  - files:
-      - "build/*"
+  - base: "build"
+    files:
+      - "build/static/*"
+      - "build/asset-manifest.json"
+      - "build/favicon.ico"
+      - "build/404.html"
+      - "build/index.html"
+      - "build/logo192.png"
+      - "build/logo512.png"
+      - "build/manifest.json"
+      - "build/precache-manifest.*.js"
+      - "build/service-worker.js"

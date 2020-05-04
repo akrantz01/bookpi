@@ -86,11 +86,12 @@ func main() {
 	api.Use(sessionMiddleware(db))
 
 	// Serve embedded files
-	fs := &assets.HTTPFS{ Prefix: "/build" }
-	router.PathPrefix("/").Handler(http.FileServer(fs))
+	router.PathPrefix("/").Handler(http.FileServer(assets.HTTP))
 
 	// Register not found handler
-	router.NotFoundHandler = notFoundHandler()
+	router.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/404.html", http.StatusTemporaryRedirect)
+	})
 
 	// Setup server
 	server := http.Server{
