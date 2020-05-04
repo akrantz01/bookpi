@@ -7,6 +7,7 @@ import (
 	"errors"
 	"github.com/akrantz01/bookpi/server/assets"
 	"github.com/akrantz01/bookpi/server/models"
+	"github.com/akrantz01/bookpi/server/responses"
 	"github.com/akrantz01/bookpi/server/routes"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -84,6 +85,14 @@ func main() {
 
 	// Register session middleware
 	api.Use(sessionMiddleware(db))
+
+	// Handle API errors
+	api.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		responses.Error(w, http.StatusNotFound, "route not found")
+	})
+	api.MethodNotAllowedHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		responses.Error(w, http.StatusMethodNotAllowed, "method not allowed")
+	})
 
 	// Serve embedded files
 	router.PathPrefix("/").Handler(assets.StaticServer)
