@@ -10,7 +10,7 @@ clean:
 	rm -rf build
 	rm -rf files
 	rm -rf database.db
-	rm -rf assets/fileb0x*
+	rm -rf assets/b0xfile_*
 
 .PHONY: deps
 deps: generate
