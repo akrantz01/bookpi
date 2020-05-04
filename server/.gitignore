@@ -3,6 +3,7 @@
 /build
 /assets/*
 !/assets/ab0x.go
+!/assets/fileserver.go
 .env
 database.db
 server
