@@ -1,7 +1,8 @@
 /.idea
 /files
 /build
+/assets/*
+!/assets/ab0x.go
 .env
 database.db
-frontend.gen.go
 server

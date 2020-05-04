@@ -10,18 +10,18 @@ clean:
 	rm -rf build
 	rm -rf files
 	rm -rf database.db
-	rm -rf frontend.gen.go
+	rm -rf assets/fileb0x*
 
 .PHONY: deps
 deps: generate
 	$(GOGET)
 
-.PHONY: deps-broccoli
-deps-broccoli:
-	$(GOGET) -u aletheia.icu/broccoli
+.PHONY: deps-embed
+deps-embed:
+	$(GOGET) -u github.com/UnnoTed/fileb0x
 
 .PHONY: generate
-generate: deps-broccoli
+generate: deps-embed
 	test -d build || ( echo "Frontend must be built first"; exit 1 )
 	$(GOGENERATE) .
 

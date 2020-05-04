@@ -1,0 +1,18 @@
+pkg: assets
+dest: "./assets/"
+fmt: true
+
+updater:
+  enabled: false
+
+compression:
+  compress: true
+  method: "DefaultCompression"
+  keep: false
+
+spread: true
+lcf: false
+
+custom:
+  - files:
+      - "build/*"

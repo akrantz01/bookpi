@@ -1,10 +1,11 @@
-//go:generate broccoli -src build -o frontend -gitignore
+//go:generate fileb0x b0x.yml
 
 package main
 
 import (
 	"context"
 	"errors"
+	"github.com/akrantz01/bookpi/server/assets"
 	"github.com/akrantz01/bookpi/server/models"
 	"github.com/akrantz01/bookpi/server/routes"
 	"github.com/gorilla/mux"
@@ -85,7 +86,8 @@ func main() {
 	api.Use(sessionMiddleware(db))
 
 	// Serve embedded files
-	router.PathPrefix("/").Handler(br.Serve("/build"))
+	fs := &assets.HTTPFS{ Prefix: "/build" }
+	router.PathPrefix("/").Handler(http.FileServer(fs))
 
 	// Setup server
 	server := http.Server{
