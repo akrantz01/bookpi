@@ -28,9 +28,9 @@ dist: build
 build:
 	mkdir -p releases
 	$(MAKE) -C display build
-	mv display/dist/main releases/$(BINARY)-$(VERSION)-display
+	/bin/cp -f display/dist/main releases/$(BINARY)-$(VERSION)-display
 	$(MAKE) -C frontend build
-	mv -f frontend/build server/build
+	/bin/cp -rf frontend/build server/build
 	$(MAKE) -C server build
 	mv server/server releases/$(BINARY)-$(VERSION)-server
 
