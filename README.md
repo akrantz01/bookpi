@@ -71,6 +71,7 @@ This could be one of the trickier steps depending on how you laid out your parts
 ### Installation
 For the software, you have two options for getting it onto your Pi.
 The easiest option is using the pre-made image, and the more involved would be downloading the installation bundle.
+If you would like to compile this for yourself, see [BUILD.md](/BUILD.md).
 
 #### The Pre-built Image (easier)
 1. Download the `bookpi.img.gz` file from the [`Releases`](https://github.com/akrantz01/bookpi/releases/latest) tab
