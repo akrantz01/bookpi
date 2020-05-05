@@ -8,7 +8,8 @@ KIB_GB = 976562.5
 # Get the disk statistics
 def disk(mount_point):
     # Get disk usage status
-    raw = subprocess.run(["df", "--output=used,pcent,avail,size", mount_point], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    raw = subprocess.run(["df", "--output=used,pcent,avail,size", mount_point],
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     # Check return code
     if raw.returncode != 0:

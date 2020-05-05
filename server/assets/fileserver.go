@@ -18,7 +18,7 @@ func init() {
 	}
 }
 
-type staticServer struct {}
+type staticServer struct{}
 
 func (s *staticServer) Open(path string) (http.File, error) {
 	f, err := FS.OpenFile(CTX, path, os.O_RDONLY, 0644)

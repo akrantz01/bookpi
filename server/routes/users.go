@@ -187,7 +187,7 @@ func deleteUser(w http.ResponseWriter, r *http.Request, _ *models.Session, files
 		return
 	}
 
-        // Set empty cookie
+	// Set empty cookie
 	http.SetCookie(w, &http.Cookie{
 		Name:     "bp-id",
 		Value:    "",
