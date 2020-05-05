@@ -6,6 +6,7 @@ However, it can be extended to include whatever bells and whistles you want, lik
 
 All the software is open source and can be found in this repo.
 It is written in Python for the display, Golang for the server, and JavaScript for the web UI.
+If you would like to contribute, please read our [contributing guidelines](/CONTRIBUTING.md)
 
 ## Usage
 Once you've setup your BookPi, connect to its Wi-Fi network and navigate to `book.pi` in the browser of your choice.
